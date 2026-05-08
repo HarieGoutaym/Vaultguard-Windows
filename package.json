@@ -1,0 +1,47 @@
+{
+  "name": "vaultguard",
+  "version": "1.0.0",
+  "description": "Zero-knowledge encrypted password manager",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win --x64",
+    "build:portable": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.vaultguard.app",
+    "productName": "VaultGuard",
+    "copyright": "Copyright © 2024",
+    "directories": { "output": "dist" },
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "icon": "assets/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "VaultGuard"
+    },
+    "files": ["src/**/*", "assets/**/*"],
+    "asar": true,
+    "asarUnpack": ["node_modules/argon2/**", "node_modules/better-sqlite3/**", "node_modules/keytar/**"]
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "dependencies": {
+    "argon2": "^0.31.2",
+    "better-sqlite3": "^9.4.0",
+    "keytar": "^7.9.0",
+    "otplib": "^12.0.1",
+    "qrcode": "^1.5.3"
+  }
+}
