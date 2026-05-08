@@ -45,31 +45,93 @@ const el = (tag, attrs = {}, ...children) => {
   return e;
 };
 
-// ─── SVG Icons ────────────────────────────────────────────────────────────────
+// ─── SVG Icons (Lucide-style stroke icons) ────────────────────────────────────
+const _svg = (path, size = 14, fill = 'none', strokeWidth = 2) =>
+  `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${fill}" stroke="currentColor" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+
 const Icon = {
-  eye: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
-  eyeOff: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`,
-  copy: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`,
-  edit: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
-  trash: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`,
-  plus: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
-  search: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
-  lock: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
-  shield: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
-  cloud: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>`,
-  settings: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
-  star: `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
-  refresh: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`,
-  generate: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
-  history: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.54"/></svg>`,
-  link: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
-  key: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`,
-  x: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
-  check: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`,
-  alert: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><triangle points="10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-  grid: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
-  heart: `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+  eye:        _svg('<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'),
+  eyeOff:     _svg('<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'),
+  copy:       _svg('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+  edit:       _svg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
+  trash:      _svg('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'),
+  plus:       _svg('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>'),
+  minus:      _svg('<line x1="5" y1="12" x2="19" y2="12"/>'),
+  search:     _svg('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>'),
+  lock:       _svg('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
+  unlock:     _svg('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>'),
+  shield:     _svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'),
+  shieldCheck:_svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>'),
+  cloud:      _svg('<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>'),
+  cloudOff:   _svg('<path d="M22.61 16.95A5 5 0 0 0 18 10h-1.26a8 8 0 0 0-7.05-6M5 5a8 8 0 0 0 4 15h9a5 5 0 0 0 1.7-.3"/><line x1="1" y1="1" x2="23" y2="23"/>'),
+  settings:   _svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'),
+  star:       _svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>', 12, 'currentColor', 0),
+  refresh:    _svg('<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>'),
+  generate:   _svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+  history:    _svg('<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.54"/><polyline points="12 7 12 12 15 14"/>'),
+  link:       _svg('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'),
+  key:        _svg('<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>'),
+  x:          _svg('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
+  check:      _svg('<polyline points="20 6 9 17 4 12"/>'),
+  alert:      _svg('<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
+  warning:    _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'),
+  info:       _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'),
+  grid:       _svg('<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>'),
+  heart:      _svg('<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>', 12, 'currentColor', 0),
+  // Sidebar / nav
+  vault:      _svg('<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/>'),
+  clock:      _svg('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'),
+  zap:        _svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+  list:       _svg('<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>'),
+  folder:     _svg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
+  // Entry types
+  user:       _svg('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'),
+  creditCard: _svg('<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>'),
+  fileText:   _svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'),
+  badge:      _svg('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2"/><line x1="14" y1="9" x2="18" y2="9"/><line x1="14" y1="13" x2="17" y2="13"/><line x1="6" y1="16" x2="18" y2="16"/>'),
+  terminal:   _svg('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'),
+  bolt:       _svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+  bitcoin:    _svg('<circle cx="12" cy="12" r="10"/><path d="M9 8h5a2.5 2.5 0 0 1 0 5H9zm0 5h6a2.5 2.5 0 0 1 0 5H9zM10 6v2M14 6v2M10 16v2M14 16v2"/>'),
+  scroll:     _svg('<path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/>'),
+  // Tag & misc
+  tag:        _svg('<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>'),
+  globe:      _svg('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'),
+  upload:     _svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>'),
+  download:   _svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'),
+  // Audit log glyphs
+  plusCircle: _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>'),
+  flame:      _svg('<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>'),
+  rotate:     _svg('<polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>'),
+  swatch:     _svg('<path d="M12 2v6m0 8v6M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24M2 12h6m8 0h6M4.93 19.07l4.24-4.24m5.66-5.66l4.24-4.24"/>'),
+  palette:    _svg('<circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125 0-.939.755-1.687 1.687-1.687h1.989c3.107 0 5.55-2.443 5.55-5.55C22 6.5 17.5 2 12 2z"/>'),
 };
+
+// ─── Entry-type icon ──────────────────────────────────────────────────────────
+function getTypeIcon(type) {
+  const map = {
+    login:    Icon.user,
+    card:     Icon.creditCard,
+    note:     Icon.fileText,
+    identity: Icon.badge,
+    ssh:      Icon.terminal,
+    api:      Icon.bolt,
+    crypto:   Icon.bitcoin,
+    license:  Icon.scroll,
+  };
+  return map[type] || Icon.lock;
+}
+
+// Backwards-compat shim for any callers still expecting an emoji-shaped helper
+function getTypeEmoji(type) { return getTypeIcon(type); }
+
+// Render a category's icon — supports legacy emoji glyphs (e.g. "📱")
+// stored on existing categories. Wrapped in a tinted tile that uses the
+// category color so emoji and modern icons share a visual language.
+function categoryIconHtml(cat, size = 22) {
+  const color = cat?.color || 'var(--accent-primary)';
+  const icon  = cat?.icon  || Icon.folder;
+  return `<span class="cat-icon-tile" style="--cat-color:${color};width:${size}px;height:${size}px">${typeof icon === 'string' && icon.startsWith('<svg') ? icon : escHtml(icon)}</span>`;
+}
 
 // ─── Toast System ─────────────────────────────────────────────────────────────
 function toast(msg, type = 'info', duration = 3000) {
@@ -408,60 +470,59 @@ function renderMainApp() {
         <div class="sidebar-section">
           <div class="sidebar-label">Views</div>
           <div class="sidebar-item active" data-view="all">
-            <span class="item-icon">🔐</span>
+            <span class="item-icon">${Icon.vault}</span>
             All Items
             <span class="sidebar-count" id="count-all">0</span>
           </div>
           <div class="sidebar-item" data-view="favorites">
-            <span class="item-icon">⭐</span>
+            <span class="item-icon">${Icon.star}</span>
             Favorites
             <span class="sidebar-count" id="count-fav">0</span>
           </div>
           <div class="sidebar-item" data-view="recent">
-            <span class="item-icon">🕐</span>
+            <span class="item-icon">${Icon.clock}</span>
             Recent
           </div>
           <div class="sidebar-item" data-view="weak">
-            <span class="item-icon">⚠️</span>
+            <span class="item-icon">${Icon.warning}</span>
             Weak Passwords
             <span class="sidebar-count" id="count-weak">0</span>
           </div>
           <div class="sidebar-item" data-view="breached">
-            <span class="item-icon">🚨</span>
+            <span class="item-icon">${Icon.alert}</span>
             Breached
             <span class="sidebar-count" id="count-breach">0</span>
           </div>
         </div>
 
         <div class="sidebar-section">
-          <div class="sidebar-label">Categories</div>
+          <div class="sidebar-label">
+            <span>Categories</span>
+            <button class="sidebar-label-action" id="add-category-btn" title="New category">${Icon.plus}</button>
+          </div>
           <div id="category-list"></div>
-          <button class="sidebar-item" id="add-category-btn" style="width:100%;text-align:left;border:none;background:none;cursor:pointer;color:var(--text-muted)">
-            <span class="item-icon">${Icon.plus}</span>
-            Add Category
-          </button>
         </div>
 
         <div class="sidebar-section">
           <div class="sidebar-label">Tools</div>
           <div class="sidebar-item" data-view="generator">
-            <span class="item-icon">⚡</span>
+            <span class="item-icon">${Icon.zap}</span>
             Password Generator
           </div>
           <div class="sidebar-item" data-view="security">
-            <span class="item-icon">🛡️</span>
+            <span class="item-icon">${Icon.shield}</span>
             Security Audit
           </div>
           <div class="sidebar-item" data-view="cloud">
-            <span class="item-icon">☁️</span>
+            <span class="item-icon">${Icon.cloud}</span>
             Cloud Sync
           </div>
           <div class="sidebar-item" data-view="audit-log">
-            <span class="item-icon">📋</span>
+            <span class="item-icon">${Icon.list}</span>
             Audit Log
           </div>
           <div class="sidebar-item" data-view="settings">
-            <span class="item-icon">⚙️</span>
+            <span class="item-icon">${Icon.settings}</span>
             Settings
           </div>
         </div>
@@ -505,7 +566,7 @@ function renderMainApp() {
             </div>
             <div class="detail-panel" id="detail-panel">
               <div class="detail-empty">
-                <div class="detail-empty-icon">🔐</div>
+                <div class="detail-empty-icon">${_svg('<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/>', 56)}</div>
                 <div style="font-size:14px;font-weight:500">Select an entry to view details</div>
                 <div style="font-size:12px">or create a new entry</div>
               </div>
@@ -574,6 +635,15 @@ function renderMainApp() {
   };
 
   $('#add-entry-btn').onclick = () => showAddEntryModal();
+
+  // Add-category button (sidebar header)
+  const addCatBtn = $('#add-category-btn');
+  if (addCatBtn) {
+    addCatBtn.onclick = (e) => {
+      e.stopPropagation();
+      showCategoryFormModal();
+    };
+  }
   
   // Search
   let searchTimeout;
@@ -624,24 +694,180 @@ function renderCategoryList() {
   const list = $('#category-list');
   if (!list) return;
   list.innerHTML = '';
+  if (!state.categories.length) {
+    list.innerHTML = `<div class="sidebar-empty">No categories yet</div>`;
+    return;
+  }
   state.categories.forEach(cat => {
     const count = state.entries.filter(e => e.categoryId === cat.id).length;
     const item = el('div', {
-      class: 'sidebar-item',
+      class: 'sidebar-item category-item',
       'data-view': `cat-${cat.id}`,
     });
+    const tile = `<span class="cat-icon-tile" style="--cat-color:${cat.color || '#7c5cfc'}">${escHtml(cat.icon || Icon.folder).startsWith('&lt;svg') ? (cat.icon || Icon.folder) : escHtml(cat.icon || '📁')}</span>`;
     item.innerHTML = `
-      <span class="item-icon">${cat.icon || '📁'}</span>
-      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(cat.name)}</span>
-      <span class="sidebar-count">${count}</span>
+      <span class="item-icon">${tile}</span>
+      <span class="category-name">${escHtml(cat.name)}</span>
+      <span class="sidebar-count" data-cat-count>${count}</span>
+      <span class="category-actions">
+        <button class="category-action" data-action="edit" title="Edit category">${Icon.edit}</button>
+        <button class="category-action danger" data-action="delete" title="Delete category">${Icon.trash}</button>
+      </span>
     `;
-    item.onclick = () => {
+    item.onclick = (e) => {
+      // Skip selection if user clicked one of the action buttons
+      const action = e.target.closest('[data-action]');
+      if (action) {
+        e.stopPropagation();
+        if (action.dataset.action === 'edit')   showCategoryFormModal(cat);
+        if (action.dataset.action === 'delete') confirmDeleteCategory(cat);
+        return;
+      }
       $$('[data-view]').forEach(i => i.classList.remove('active'));
       item.classList.add('active');
       navigateTo(`cat-${cat.id}`);
     };
     list.appendChild(item);
   });
+}
+
+// ─── Category create / edit / delete ──────────────────────────────────────────
+const CATEGORY_ICONS = [
+  '🌐','💳','💼','🛒','🎮','📧','🔑','🏠','🎬','🎵','📚','🏥',
+  '✈️','🚗','💰','🏦','📷','💻','🛡️','📱','🎓','🎁','💪','☕',
+];
+const CATEGORY_COLORS = [
+  '#7c5cfc','#00d4ff','#00d68f','#ffb300','#ff4757','#ff7b72',
+  '#ec4899','#a78bfa','#22d3ee','#facc15','#34d399','#f472b6',
+];
+
+function showCategoryFormModal(existing = null) {
+  const isEdit = !!existing;
+  const initIcon  = existing?.icon  || CATEGORY_ICONS[0];
+  const initColor = existing?.color || CATEGORY_COLORS[0];
+
+  const modal = el('div', { class: 'modal' });
+  modal.innerHTML = `
+    <div class="modal-header">
+      <div class="modal-title">${isEdit ? 'Edit Category' : 'New Category'}</div>
+      <button class="btn-icon-sm" id="modal-close" aria-label="Close">${Icon.x}</button>
+    </div>
+    <div class="modal-body">
+      <div class="category-preview" id="cat-preview">
+        <span class="cat-icon-tile cat-icon-tile-lg" id="cat-preview-tile" style="--cat-color:${initColor}">${escHtml(initIcon)}</span>
+        <div>
+          <div class="cat-preview-label">Preview</div>
+          <div class="cat-preview-name" id="cat-preview-name">${escHtml(existing?.name || 'New Category')}</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Name *</label>
+        <input type="text" id="cat-name" class="form-input" maxlength="64" placeholder="e.g. Personal, Work, Travel" value="${escHtml(existing?.name || '')}" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Icon</label>
+        <div class="icon-picker" id="cat-icon-picker">
+          ${CATEGORY_ICONS.map(i => `
+            <button type="button" class="icon-swatch ${i === initIcon ? 'selected' : ''}" data-icon="${escHtml(i)}">${escHtml(i)}</button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <div class="color-picker" id="cat-color-picker">
+          ${CATEGORY_COLORS.map(c => `
+            <button type="button" class="color-swatch ${c.toLowerCase() === initColor.toLowerCase() ? 'selected' : ''}" data-color="${c}" style="--swatch:${c}" aria-label="${c}"></button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div id="cat-error" class="form-error hidden"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="modal-cancel">Cancel</button>
+      <button class="btn btn-primary" id="cat-save">${isEdit ? 'Save Changes' : 'Add Category'}</button>
+    </div>
+  `;
+  showModal(modal);
+
+  let pickedIcon  = initIcon;
+  let pickedColor = initColor;
+  const tileEl    = $('#cat-preview-tile');
+  const nameLabel = $('#cat-preview-name');
+
+  $$('.icon-swatch', modal).forEach(b => {
+    b.onclick = () => {
+      $$('.icon-swatch', modal).forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+      pickedIcon = b.dataset.icon;
+      tileEl.textContent = pickedIcon;
+    };
+  });
+  $$('.color-swatch', modal).forEach(b => {
+    b.onclick = () => {
+      $$('.color-swatch', modal).forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+      pickedColor = b.dataset.color;
+      tileEl.style.setProperty('--cat-color', pickedColor);
+    };
+  });
+
+  $('#cat-name').addEventListener('input', e => {
+    nameLabel.textContent = e.target.value.trim() || 'New Category';
+  });
+
+  $('#modal-close').onclick = closeModal;
+  $('#modal-cancel').onclick = closeModal;
+
+  $('#cat-save').onclick = async () => {
+    const name = $('#cat-name').value.trim();
+    const errEl = $('#cat-error');
+    errEl.classList.add('hidden');
+    if (!name) { errEl.textContent = 'Name is required'; errEl.classList.remove('hidden'); return; }
+
+    const payload = { name, icon: pickedIcon, color: pickedColor };
+    let result;
+    if (isEdit) {
+      result = await API.categories.update(existing.id, payload);
+    } else {
+      result = await API.categories.add({ ...payload, id: `cat-${Date.now()}` });
+    }
+    if (!result) { errEl.textContent = 'Failed to save category'; errEl.classList.remove('hidden'); return; }
+
+    state.categories = await API.categories.get();
+    renderCategoryList();
+    closeModal();
+    toast(isEdit ? 'Category updated' : 'Category added', 'success');
+  };
+}
+
+function confirmDeleteCategory(cat) {
+  const usage = state.entries.filter(e => e.categoryId === cat.id).length;
+  const detail = usage
+    ? `\n\n${usage} entr${usage === 1 ? 'y' : 'ies'} will be moved to "No category".`
+    : '';
+  showConfirmModal(
+    'Delete Category',
+    `Are you sure you want to delete "${cat.name}"?${detail}`,
+    async () => {
+      const result = await API.categories.delete(cat.id);
+      if (result?.success) {
+        state.categories = await API.categories.get();
+        state.entries    = await API.entries.getAll();
+        renderCategoryList();
+        renderEntryList();
+        updateCounts();
+        if (state.currentView === `cat-${cat.id}`) navigateTo('all');
+        toast('Category deleted', 'success');
+      } else {
+        toast('Failed to delete category', 'error');
+      }
+    },
+    'danger'
+  );
 }
 
 // ─── Entry List ───────────────────────────────────────────────────────────────
@@ -700,7 +926,7 @@ function renderEntryList() {
 }
 
 function createEntryListItem(entry) {
-  const item = el('div', { class: `entry-item${entry.id === state.selectedEntry?.id ? ' selected' : ''}` });
+  const item = el('div', { class: `entry-item${entry.id === state.selectedEntry?.id ? ' selected' : ''}`, 'data-entry-id': entry.id });
   
   const favicon = getFaviconHtml(entry);
   const badges = [];
@@ -744,16 +970,16 @@ window._faviconFallback = function(img, domain) {
 function getFaviconHtml(entry) {
   if (entry.url) {
     try {
-      const domain = new URL(entry.url.startsWith('http') ? entry.url : `https://${entry.url}`).hostname;
-      return `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=32" onerror="window._faviconFallback(this,'${domain}')" style="width:32px;height:32px;border-radius:4px" />`;
+      const raw    = entry.url.startsWith('http') ? entry.url : `https://${entry.url}`;
+      const host   = new URL(raw).hostname;
+      // Validate: only [a-z0-9.-] hostnames pass through unescaped — anything
+      // else falls through to the safe SVG type-glyph.
+      if (!/^[a-z0-9.-]+$/i.test(host)) throw new Error('bad host');
+      const domain = encodeURIComponent(host);
+      return `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=32" onerror="window._faviconFallback(this,'${escHtml(host).replace(/'/g, '&#039;')}')" style="width:32px;height:32px;border-radius:6px" />`;
     } catch {}
   }
-  return `<span style="font-size:18px">${getTypeEmoji(entry.entryType)}</span>`;
-}
-
-function getTypeEmoji(type) {
-  const map = { login: '🔑', card: '💳', note: '📝', identity: '🪪', ssh: '🔐', api: '⚡', crypto: '₿', license: '📜' };
-  return map[type] || '🔒';
+  return `<span class="entry-type-icon">${getTypeIcon(entry.entryType)}</span>`;
 }
 
 // ─── Entry Detail ─────────────────────────────────────────────────────────────
@@ -762,12 +988,9 @@ async function selectEntry(entry) {
   const full = await API.entries.get(entry.id);
   state.selectedEntry = full;
 
-  $$('.entry-item').forEach(i => i.classList.remove('selected'));
-  $$('.entry-item').forEach(i => {
-    if (i.querySelector('.entry-title')?.textContent === (entry.title || 'Untitled')) {
-      i.classList.add('selected');
-    }
-  });
+  // Match by id (the previous title-based match selected unrelated entries
+  // when two items shared the same title)
+  $$('.entry-item').forEach(i => i.classList.toggle('selected', i.dataset.entryId === entry.id));
 
   renderEntryDetail(full);
 }
@@ -824,7 +1047,7 @@ function renderEntryDetail(entry) {
         renderEntryList();
         renderCategoryList();
         updateCounts();
-        $('#detail-panel').innerHTML = `<div class="detail-empty"><div class="detail-empty-icon">🗑️</div><div>Entry deleted</div></div>`;
+        $('#detail-panel').innerHTML = `<div class="detail-empty"><div class="detail-empty-icon">${_svg('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>', 56)}</div><div>Entry deleted</div></div>`;
       },
       'danger'
     );
@@ -942,9 +1165,9 @@ function renderEntryFields(entry) {
     html += `
       <div class="field-group">
         <div class="field-label">Tags</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px">
-          ${entry.tags.map(t => `<span class="tag">🏷️ ${escHtml(t)}</span>`).join('')}
-        </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            ${entry.tags.map(t => `<span class="tag">${Icon.tag}<span>${escHtml(t)}</span></span>`).join('')}
+          </div>
       </div>
     `;
   }
@@ -1060,11 +1283,10 @@ function showEntryFormModal(entry, prefill = {}) {
     </div>
     <div class="modal-body" style="max-height:60vh;overflow-y:auto">
       <!-- Entry Type Tabs -->
-      <div class="tabs" style="margin-bottom:16px" id="type-tabs">
-        <button class="tab${(!prefill.entryType || prefill.entryType === 'login') ? ' active' : ''}" data-type="login">🔑 Login</button>
-        <button class="tab${prefill.entryType === 'card' ? ' active' : ''}" data-type="card">💳 Card</button>
-        <button class="tab${prefill.entryType === 'note' ? ' active' : ''}" data-type="note">📝 Note</button>
-        <button class="tab${prefill.entryType === 'identity' ? ' active' : ''}" data-type="identity">🪪 Identity</button>
+      <div class="tabs tabs-icon" style="margin-bottom:16px" id="type-tabs">
+        <button class="tab${(!prefill.entryType || prefill.entryType === 'login') ? ' active' : ''}" data-type="login">${Icon.user}<span>Login</span></button>
+        <button class="tab${prefill.entryType === 'card' ? ' active' : ''}" data-type="card">${Icon.creditCard}<span>Card</span></button>
+        <button class="tab${prefill.entryType === 'note' ? ' active' : ''}" data-type="note">${Icon.fileText}<span>Note</span></button>
       </div>
 
       <div class="form-group">
@@ -1449,25 +1671,25 @@ function renderSecurityView() {
       <div style="max-width:700px">
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px" id="security-stats">
           <div class="stat-card">
-            <div class="stat-icon red">🚨</div>
+            <div class="stat-icon red">${Icon.alert}</div>
             <div><div class="stat-value" id="sec-breached">-</div><div class="stat-label">Breached</div></div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon yellow">⚠️</div>
+            <div class="stat-icon yellow">${Icon.warning}</div>
             <div><div class="stat-value" id="sec-weak">-</div><div class="stat-label">Weak Passwords</div></div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon blue">🔁</div>
+            <div class="stat-icon blue">${Icon.rotate}</div>
             <div><div class="stat-value" id="sec-reused">-</div><div class="stat-label">Reused Passwords</div></div>
           </div>
         </div>
 
-        <div style="display:flex;gap:10px;margin-bottom:20px">
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
           <button class="btn btn-primary" id="run-breach-check">
-            🔍 Check for Breaches (HaveIBeenPwned)
+            ${Icon.search} Check for Breaches (HaveIBeenPwned)
           </button>
           <button class="btn btn-secondary" id="run-full-audit">
-            🛡️ Full Security Audit
+            ${Icon.shieldCheck} Full Security Audit
           </button>
         </div>
 
@@ -1494,6 +1716,8 @@ async function loadSecurityAudit() {
   const secWeak = $('#sec-weak');
   const secReused = $('#sec-reused');
   if (secWeak) secWeak.textContent = weakEntries.length;
+  // Each reused password counts every entry sharing it once — not the
+  // doubled value the previous reduce produced.
   if (secReused) secReused.textContent = reusedGroups.reduce((a, g) => a + g.length, 0);
 
   // Wire buttons
@@ -1523,11 +1747,11 @@ async function loadSecurityAudit() {
           `).join('')}
         `;
       } else if (resultsEl) {
-        resultsEl.innerHTML = `<div style="color:var(--accent-success);font-size:13px;padding:12px">✓ No breached passwords found!</div>`;
+        resultsEl.innerHTML = `<div class="audit-success">${Icon.check} No breached passwords found</div>`;
       }
       
       breachBtn.disabled = false;
-      breachBtn.innerHTML = '🔍 Check for Breaches (HaveIBeenPwned)';
+      breachBtn.innerHTML = `${Icon.search} Check for Breaches (HaveIBeenPwned)`;
     };
   }
 
@@ -1568,7 +1792,7 @@ async function loadSecurityAudit() {
       }
 
       if (!html) {
-        html = `<div style="color:var(--accent-success);font-size:13px;padding:12px">🎉 Your vault looks great! No issues found.</div>`;
+        html = `<div class="audit-success">${Icon.shieldCheck} Your vault looks great — no issues found.</div>`;
       }
 
       resultsEl.innerHTML = html;
@@ -1585,9 +1809,10 @@ function renderCloudView() {
       
       <div style="max-width:500px">
         <div class="card" style="margin-bottom:16px">
-          <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">
-            🔒 Your vault is encrypted locally before syncing. Google only stores encrypted blobs — 
-            it's impossible for anyone without your master password to read your data.
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6;display:flex;gap:8px;align-items:flex-start">
+            <span style="flex-shrink:0;color:var(--accent-secondary);margin-top:1px">${Icon.shield}</span>
+            <span>Your vault is encrypted locally before syncing. Google only stores encrypted blobs —
+            it's impossible for anyone without your master password to read your data.</span>
           </div>
           <div id="cloud-status-detail"></div>
         </div>
@@ -1722,14 +1947,16 @@ async function loadAuditLog() {
   if (!list) return;
 
   const actionIcons = {
-    vault_created: '🆕', vault_unlocked: '🔓', vault_locked: '🔒',
-    entry_viewed: '👁️', entry_created: '✅', entry_updated: '✏️', entry_deleted: '🗑️',
-    master_password_changed: '🔑',
+    vault_created: Icon.plusCircle, vault_unlocked: Icon.unlock, vault_locked: Icon.lock,
+    entry_viewed:  Icon.eye,        entry_created:  Icon.plus,   entry_updated: Icon.edit,
+    entry_deleted: Icon.trash,      master_password_changed: Icon.key,
+    category_added: Icon.folder,    category_updated: Icon.edit, category_deleted: Icon.trash,
+    vault_change_password_failed: Icon.alert, vault_password_changed: Icon.key,
   };
 
   list.innerHTML = logs.map(log => `
     <div class="health-item" style="margin-bottom:6px">
-      <span style="font-size:16px">${actionIcons[log.action] || '📋'}</span>
+      <span class="audit-glyph">${actionIcons[log.action] || Icon.list}</span>
       <div style="flex:1">
         <div style="font-size:12.5px;font-weight:500">${escHtml(log.action.replace(/_/g, ' '))}</div>
         ${log.details ? `<div style="font-size:11px;color:var(--text-muted)">${escHtml(log.details)}</div>` : ''}
@@ -1968,19 +2195,17 @@ function showChangeMasterPasswordModal() {
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner"></div> Changing...';
 
-    // Re-lock and re-unlock with current to verify, then create with new
-    const verify = await API.vault.unlock({ masterPassword: current });
-    if (!verify.success) {
-      errEl.textContent = 'Current password is incorrect';
-      errEl.classList.remove('hidden');
-      btn.disabled = false;
-      btn.innerHTML = 'Change Password';
-      return;
-    }
-
-    const result = await API.vault.create({ masterPassword: next });
+    // Use the dedicated re-encryption IPC. The previous flow called
+    // vault.create() after unlock() which only rewrote the salt + verify
+    // metadata while leaving every existing entry encrypted under the OLD
+    // key — effectively nuking the vault. The new IPC re-encrypts every
+    // entry inside one transaction.
+    const result = await API.vault.changeMasterPassword({
+      currentPassword: current,
+      newPassword: next,
+    });
     if (result.success) {
-      toast('Master password changed successfully', 'success');
+      toast(`Master password changed (${result.reencrypted ?? 0} entries re-encrypted)`, 'success');
       closeModal();
     } else {
       errEl.textContent = result.error || 'Failed to change password';
@@ -2057,7 +2282,7 @@ function showImportModal() {
       <div id="import-dropzone" style="
         border:2px dashed var(--border-normal);border-radius:10px;padding:28px 20px;
         text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg-void)">
-        <div style="font-size:28px;margin-bottom:8px">📂</div>
+        <div class="import-dropzone-icon">${_svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>', 36)}</div>
         <div style="font-size:13px;color:var(--text-primary);font-weight:500">Drop file here or click to browse</div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:4px" id="import-accept-hint">Accepts CSV, JSON, XML, .1pux, .vgb</div>
         <input type="file" id="import-file-input" style="display:none">
@@ -2165,7 +2390,7 @@ function showImportModal() {
         // Encrypted backup — just show ready state, decrypt on confirm
         preview.style.display  = '';
         dropzone.style.display = 'none';
-        summary.textContent    = '🔒 Encrypted VaultGuard backup ready';
+        summary.textContent    = 'Encrypted VaultGuard backup ready';
         badgeEl.textContent    = '.vgb';
         entryList.innerHTML    = '<div style="padding:12px;font-size:12px;color:var(--text-muted)">Contents will be decrypted and previewed after you enter your backup password and click Import.</div>';
         parsedCount = 1; // fake count so button enables
@@ -2197,21 +2422,24 @@ function showImportModal() {
       const withTotp = rows.filter(r => r.totpSecret).length;
       const withNotes = rows.filter(r => r.notes).length;
       $('#import-stats').innerHTML = [
-        withPw   ? `<span style="font-size:11px;padding:2px 7px;background:rgba(0,212,170,0.1);color:var(--accent-success);border-radius:8px">🔑 ${withPw} passwords</span>` : '',
-        withTotp ? `<span style="font-size:11px;padding:2px 7px;background:rgba(99,102,241,0.1);color:var(--accent-primary);border-radius:8px">🔐 ${withTotp} TOTP</span>` : '',
-        withNotes? `<span style="font-size:11px;padding:2px 7px;background:rgba(255,165,2,0.1);color:var(--accent-warning);border-radius:8px">📝 ${withNotes} notes</span>` : '',
+        withPw   ? `<span class="import-stat-pill success">${Icon.key} ${withPw} passwords</span>` : '',
+        withTotp ? `<span class="import-stat-pill primary">${Icon.shieldCheck} ${withTotp} TOTP</span>` : '',
+        withNotes? `<span class="import-stat-pill warning">${Icon.fileText} ${withNotes} notes</span>` : '',
       ].join('');
 
       entryList.innerHTML = rows.slice(0, 60).map(e => `
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border-subtle)">
-          <span style="font-size:15px;flex-shrink:0">${getTypeEmoji(e.entryType || 'login')}</span>
+        <div class="import-row">
+          <span class="import-row-icon">${getTypeIcon(e.entryType || 'login')}</span>
           <div style="flex:1;min-width:0">
-            <div style="font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(e.title||e.username||'Untitled')}</div>
-            <div style="font-size:11px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(e.username||e.url||'')}</div>
+            <div class="import-row-title">${escHtml(e.title||e.username||'Untitled')}</div>
+            <div class="import-row-meta">${escHtml(e.username||e.url||'')}</div>
           </div>
-          <span style="font-size:10px;color:var(--text-muted);flex-shrink:0">${e.password?'🔑':''} ${e.totpSecret?'🔐':''}</span>
+          <span class="import-row-flags" aria-label="flags">
+            ${e.password ? Icon.key : ''}
+            ${e.totpSecret ? Icon.shieldCheck : ''}
+          </span>
         </div>
-      `).join('') + (rows.length > 60 ? `<div style="padding:8px 12px;font-size:11px;color:var(--text-muted)">… and ${rows.length - 60} more</div>` : '');
+      `).join('') + (rows.length > 60 ? `<div class="import-row-more">… and ${rows.length - 60} more</div>` : '');
 
       confirmBtn.disabled = false;
     } catch(e) {
