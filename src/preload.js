@@ -12,9 +12,10 @@ const { contextBridge, ipcRenderer } = require('electron');
 // Whitelist of allowed IPC channels (renderer can only invoke these)
 const ALLOWED_CHANNELS = new Set([
   'vault:check-exists', 'vault:create', 'vault:unlock', 'vault:lock',
+  'vault:change-master-password',
   'entries:get-all', 'entries:get', 'entries:create', 'entries:update',
   'entries:delete', 'entries:get-history',
-  'categories:get', 'categories:add', 'categories:delete',
+  'categories:get', 'categories:add', 'categories:update', 'categories:delete',
   'passwords:generate', 'passwords:strength',
   'breach:check-all',
   'totp:generate', 'totp:setup',
@@ -23,7 +24,7 @@ const ALLOWED_CHANNELS = new Set([
   'settings:get', 'settings:set',
   'audit:get-log',
   'keyfile:select', 'keyfile:generate', 'keyfile:mix',
-  'entries:import', 'breach:check-all', 'audit:get-log',
+  'entries:import',
   'vault:integrity-check', 'vault:export-encrypted', 'vault:import-encrypted',
   'window:minimize', 'window:maximize', 'window:close',
 ]);
@@ -49,10 +50,11 @@ function deepFreeze(obj) {
 // Deep-frozen so renderer-side code cannot mutate or replace any method.
 contextBridge.exposeInMainWorld('vaultAPI', deepFreeze({
   vault: {
-    checkExists: ()     => invoke('vault:check-exists'),
-    create:      (opts) => invoke('vault:create', opts),
-    unlock:      (opts) => invoke('vault:unlock', opts),
-    lock:        ()     => invoke('vault:lock'),
+    checkExists:          ()     => invoke('vault:check-exists'),
+    create:               (opts) => invoke('vault:create', opts),
+    unlock:               (opts) => invoke('vault:unlock', opts),
+    lock:                 ()     => invoke('vault:lock'),
+    changeMasterPassword: (opts) => invoke('vault:change-master-password', opts),
   },
   entries: {
     getAll:     ()         => invoke('entries:get-all'),
@@ -63,9 +65,10 @@ contextBridge.exposeInMainWorld('vaultAPI', deepFreeze({
     getHistory: (id)       => invoke('entries:get-history', id),
   },
   categories: {
-    get:    ()    => invoke('categories:get'),
-    add:    (cat) => invoke('categories:add', cat),
-    delete: (id)  => invoke('categories:delete', id),
+    get:    ()         => invoke('categories:get'),
+    add:    (cat)      => invoke('categories:add', cat),
+    update: (id, cat)  => invoke('categories:update', id, cat),
+    delete: (id)       => invoke('categories:delete', id),
   },
   passwords: {
     generate: (opts) => invoke('passwords:generate', opts),

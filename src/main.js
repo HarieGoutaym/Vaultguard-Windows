@@ -233,11 +233,11 @@ function registerIPC() {
 
       // Seed default categories
       const defaultCats = [
-        {id:'cat-1',name:'Social Media',icon:'📱'},
-        {id:'cat-2',name:'Finance',icon:'💰'},
-        {id:'cat-3',name:'Work',icon:'💼'},
-        {id:'cat-4',name:'Shopping',icon:'🛒'},
-        {id:'cat-5',name:'Gaming',icon:'🎮'},
+        {id:'cat-1',name:'Social Media',icon:'🌐',color:'#7c5cfc',isDefault:true},
+        {id:'cat-2',name:'Finance',     icon:'💳',color:'#00d68f',isDefault:true},
+        {id:'cat-3',name:'Work',        icon:'💼',color:'#00d4ff',isDefault:true},
+        {id:'cat-4',name:'Shopping',    icon:'🛒',color:'#ffb300',isDefault:true},
+        {id:'cat-5',name:'Gaming',      icon:'🎮',color:'#ff4757',isDefault:true},
       ];
       const ins = db.prepare('INSERT OR REPLACE INTO categories VALUES (?,?)');
       defaultCats.forEach(c => ins.run(c.id, JSON.stringify(c)));
@@ -324,6 +324,79 @@ function registerIPC() {
     return { success: true };
   });
 
+  // ── Change master password ──────────────────────────────────────────────────
+  // Re-derives a new key from the new password, re-encrypts every entry under
+  // the new key, and atomically rewrites the salt + verify metadata. The vault
+  // remains unlocked under the new key on success. On any failure we roll back
+  // and keep the original key/data intact.
+  ipcMain.handle('vault:change-master-password', async (_, { currentPassword, newPassword, hint }) => {
+    if (!db || !vaultKey) return { success: false, error: 'Vault locked' };
+    if (typeof newPassword !== 'string' || newPassword.length < 8) {
+      return { success: false, error: 'New password must be at least 8 characters' };
+    }
+    try {
+      // 1. Verify current password by deriving its key and matching against stored verify
+      const saltRow = db.prepare('SELECT value FROM meta WHERE key=?').get('vault_salt');
+      const hashRow = db.prepare('SELECT value FROM meta WHERE key=?').get('vault_hash');
+      const hmacRow = db.prepare('SELECT value FROM meta WHERE key=?').get('vault_verify_hmac');
+      if (!saltRow || !hashRow) return { success: false, error: 'Vault metadata missing' };
+      const currentKey = await deriveKey(currentPassword, saltRow.value);
+      try {
+        const decrypted = decrypt(hashRow.value, currentKey);
+        let match = false;
+        if (hmacRow) {
+          const computed = crypto.createHmac('sha256', currentKey).update(decrypted).digest('hex');
+          const aBuf = Buffer.from(computed, 'hex');
+          const bBuf = Buffer.from(hmacRow.value, 'hex');
+          match = aBuf.length === bBuf.length && crypto.timingSafeEqual(aBuf, bBuf);
+        }
+        if (!match) throw new Error('mismatch');
+      } catch {
+        currentKey.fill(0);
+        logAudit('vault_change_password_failed', 'wrong current password');
+        return { success: false, error: 'Current master password is incorrect' };
+      }
+
+      // 2. Derive new key from new password + fresh salt
+      const newSalt        = crypto.randomBytes(32).toString('hex');
+      const newKey         = await deriveKey(newPassword, newSalt);
+      const newVerifyPlain = crypto.randomBytes(32).toString('hex');
+      const newVerifyEnc   = encrypt(newVerifyPlain, newKey);
+      const newVerifyHmac  = crypto.createHmac('sha256', newKey).update(newVerifyPlain).digest('hex');
+
+      // 3. Re-encrypt every entry inside a single transaction. If anything
+      //    throws, better-sqlite3 rolls back automatically.
+      const rows = db.prepare('SELECT id, data FROM entries').all();
+      const upd  = db.prepare('UPDATE entries SET data=? WHERE id=?');
+      const setMeta = db.prepare('INSERT OR REPLACE INTO meta VALUES (?,?)');
+      const reEncryptAll = db.transaction(() => {
+        for (const row of rows) {
+          const plain = decrypt(row.data, vaultKey);
+          const enc   = encrypt(plain, newKey);
+          upd.run(enc, row.id);
+        }
+        setMeta.run('vault_salt',        newSalt);
+        setMeta.run('vault_hash',        newVerifyEnc);
+        setMeta.run('vault_verify_hmac', newVerifyHmac);
+        if (typeof hint === 'string') setMeta.run('vault_hint', hint.slice(0, 256));
+        // Drop any legacy plaintext verify row left from older vault versions
+        db.prepare('DELETE FROM meta WHERE key=?').run('vault_verify');
+      });
+      reEncryptAll();
+
+      // 4. Swap in-memory key (zero out the old one)
+      vaultKey.fill(0);
+      vaultKey = newKey;
+      currentKey.fill(0);
+
+      logAudit('vault_password_changed', `${rows.length} entries re-encrypted`);
+      resetAutoLock();
+      return { success: true, reencrypted: rows.length };
+    } catch (e) {
+      return { success: false, error: e?.message || 'Failed to change password' };
+    }
+  });
+
   // ── Entries ──
   ipcMain.handle('entries:get-all', () => {
     if (!vaultKey || !db) return [];
@@ -402,19 +475,57 @@ function registerIPC() {
   ipcMain.handle('categories:add', (_, cat) => {
     if (!db) return null;
     const safe = {
-      name: String(cat?.name ?? '').slice(0, 64),
-      icon: String(cat?.icon ?? '📁').slice(0, 8),
-      color: String(cat?.color ?? '').slice(0, 7),
+      name:  String(cat?.name  ?? '').slice(0, 64).trim(),
+      icon:  String(cat?.icon  ?? '📁').slice(0, 8),
+      color: /^#[0-9a-f]{6}$/i.test(String(cat?.color ?? '')) ? String(cat.color) : '#7c5cfc',
     };
     if (!safe.name) return null;
-    const c = { id: crypto.randomUUID(), ...safe };
+    const c = { id: crypto.randomUUID(), ...safe, isDefault: false };
     db.prepare('INSERT INTO categories VALUES (?,?)').run(c.id, JSON.stringify(c));
+    logAudit('category_created', safe.name);
     return c;
   });
 
+  ipcMain.handle('categories:update', (_, id, cat) => {
+    if (!db || typeof id !== 'string' || !id) return null;
+    const row = db.prepare('SELECT data FROM categories WHERE id=?').get(id);
+    if (!row) return null;
+    let existing;
+    try { existing = JSON.parse(row.data); } catch { return null; }
+    const next = {
+      ...existing,
+      name:  String(cat?.name  ?? existing.name).slice(0, 64).trim(),
+      icon:  String(cat?.icon  ?? existing.icon).slice(0, 8),
+      color: /^#[0-9a-f]{6}$/i.test(String(cat?.color ?? '')) ? String(cat.color) : (existing.color || '#7c5cfc'),
+    };
+    if (!next.name) return null;
+    db.prepare('UPDATE categories SET data=? WHERE id=?').run(JSON.stringify(next), id);
+    logAudit('category_updated', next.name);
+    return next;
+  });
+
   ipcMain.handle('categories:delete', (_, id) => {
-    if (!db) return;
-    db.prepare('DELETE FROM categories WHERE id=?').run(id);
+    if (!db || !vaultKey || typeof id !== 'string' || !id) return { success: false };
+    // Clear categoryId on every entry referencing this category so we don't
+    // leave orphan references. Re-encrypt each affected row in a transaction.
+    const rows = db.prepare('SELECT id, data FROM entries').all();
+    const upd  = db.prepare('UPDATE entries SET data=?, updated_at=? WHERE id=?');
+    const tx = db.transaction(() => {
+      const now = Date.now();
+      for (const row of rows) {
+        try {
+          const data = JSON.parse(decrypt(row.data, vaultKey));
+          if (data.categoryId === id) {
+            data.categoryId = '';
+            upd.run(encrypt(JSON.stringify(data), vaultKey), now, row.id);
+          }
+        } catch { /* skip un-decryptable */ }
+      }
+      db.prepare('DELETE FROM categories WHERE id=?').run(id);
+    });
+    tx();
+    logAudit('category_deleted', id);
+    return { success: true };
   });
 
   // ── Password tools ──
