@@ -1,0 +1,447 @@
+/* Premium 100/100 Overhaul */
+
+:root {
+  /* Premium Dark Theme Core Tokens */
+  --canvas: #09090b;
+  --canvas-soft: #121214;
+  --surface: #18181b;
+  --surface-soft: #27272a;
+  --surface-hover: #3f3f46;
+  --surface-press: #52525b;
+
+  --line: #27272a;
+  --line-strong: #3f3f46;
+  --line-accent: #3b82f6;
+
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-press: #1d4ed8;
+  --accent-soft: rgba(59, 130, 246, 0.1);
+  --accent-tint: rgba(59, 130, 246, 0.2);
+
+  --t1: #f8fafc;
+  --t2: #cbd5e1;
+  --t3: #94a3b8;
+  --t4: #64748b;
+  
+  --on-accent: #ffffff;
+  --glass-bg: rgba(24, 24, 27, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  background-color: var(--canvas);
+  color: var(--t1);
+  font-family: 'Inter', -apple-system, sans-serif;
+  letter-spacing: -0.015em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.titlebar {
+  background: var(--canvas-soft);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+}
+
+.sidebar-item {
+  border-radius: 8px;
+  margin: 2px 8px;
+  padding: 8px 12px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-item.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.sidebar-item:hover:not(.active) {
+  background: var(--surface-hover);
+}
+
+.main-panel {
+  background: var(--canvas);
+}
+
+.toolbar {
+  background: var(--canvas);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+  padding: 16px 24px;
+}
+
+.search-input {
+  background: var(--surface-soft);
+  border: 1px solid var(--line-strong);
+  color: var(--t1);
+  border-radius: 20px;
+  padding-left: 36px;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  border: none;
+  box-shadow: 0 2px 8px var(--accent-tint);
+  font-weight: 500;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--accent-tint);
+}
+
+/* Animations & Transitions */
+.list-item {
+  border: 1px solid transparent;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  transition: all 0.2s ease;
+}
+
+.list-item:hover {
+  background: var(--surface-hover);
+}
+
+.list-item.selected {
+  background: var(--surface-soft);
+  border-left: 3px solid var(--accent);
+}
+
+.detail-panel {
+  background: var(--surface);
+  border-left: 1px solid var(--line);
+}
+
+.field-group {
+  background: var(--canvas-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Glassmorphism Modals */
+.modal {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+  border-radius: 20px;
+}
+
+/* New Badges */
+.badge-pro {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-team {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+/* Layout Fixes for Scrolling & Height */
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+#screen-main {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+.main-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.view {
+  display: none !important;
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+}
+
+.view.active {
+  display: flex !important;
+}
+
+#view-entries.active {
+  flex-direction: row;
+}
+
+/* Ensure single pane views scroll */
+#view-generator,
+#view-security,
+#view-cloud,
+#view-audit-log,
+#view-settings,
+#view-enterprise {
+  overflow-y: auto !important;
+}
+
+.enterprise-pane {
+  padding-bottom: 40px;
+}
+
+/* List/Detail panels */
+.entry-list-panel {
+  width: 320px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.entry-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.detail-panel {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.pane-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px;
+}
+
+/* Updated Icons Base */
+.item-icon svg {
+  stroke-width: 1.5;
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+}
+
+.sidebar-item.active .item-icon svg {
+  stroke-width: 2;
+  stroke: var(--accent);
+}
+
+.stat-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Force override app.js styles */
+.pane-view {
+  background: var(--canvas) !important;
+  color: var(--t1) !important;
+}
+
+.settings-section-title {
+  color: var(--t1) !important;
+  font-weight: 700 !important;
+}
+
+.settings-section-desc {
+  color: var(--t3) !important;
+}
+
+.tab {
+  background: var(--surface) !important;
+  color: var(--t2) !important;
+  border: 1px solid var(--line) !important;
+}
+
+.tab.active {
+  background: var(--accent) !important;
+  color: #fff !important;
+  border-color: var(--accent) !important;
+}
+
+.generator-output {
+  background: var(--surface-soft) !important;
+  border: 1px solid var(--line-strong) !important;
+  color: var(--t1) !important;
+}
+
+.cloud-page {
+  padding: 32px !important;
+  background: var(--canvas) !important;
+}
+
+.cloud-status-strip {
+  background: var(--surface-soft) !important;
+  border: 1px solid var(--line) !important;
+}
+
+.cloud-chip {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--t2) !important;
+}
+
+.cloud-chip.ok {
+  color: var(--success) !important;
+  border-color: var(--success-soft) !important;
+}
+
+.section-header {
+  color: var(--t1) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.settings-item {
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.settings-item-label {
+  color: var(--t1) !important;
+}
+
+.settings-item-desc {
+  color: var(--t3) !important;
+}
+
+select.form-select {
+  background: var(--surface) !important;
+  color: var(--t1) !important;
+  border: 1px solid var(--line) !important;
+}
+
+/* Auth / Unlock screen */
+.auth-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--shadow-lg) !important;
+  border-radius: 20px !important;
+}
+
+.form-label {
+  color: var(--t2) !important;
+}
+
+
+/* Form Inputs Dark Mode Fix */
+.form-input, .form-select, .form-textarea {
+  background: var(--surface-soft) !important;
+  color: var(--t1) !important;
+  border-color: var(--line-strong) !important;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  background: var(--surface) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-tint) !important;
+}
+
+/* Master password fix */
+input[type="password"] {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  letter-spacing: 0.1em !important;
+}
+
+.sidebar {
+  overflow-y: auto !important;
+}
+
+/* Team Vault Card Fix */
+.team-card {
+  display: block !important;
+}
+
+
+/* Buttons Fix (Ghost, Secondary, Actions) */
+.btn-secondary, .btn-ghost {
+  background: var(--surface-soft) !important;
+  color: var(--t2) !important;
+  border-color: var(--line-strong) !important;
+}
+
+.btn-secondary:hover, .btn-ghost:hover {
+  background: var(--surface-hover) !important;
+  color: var(--t1) !important;
+  border-color: var(--t4) !important;
+}
+
+.cloud-segment {
+  background: transparent !important;
+  color: var(--t3) !important;
+}
+.cloud-segment.active {
+  background: var(--surface-hover) !important;
+  color: var(--accent) !important;
+  border: 1px solid var(--line-strong) !important;
+}
+.cloud-segments {
+  background: var(--surface-soft) !important;
+  border: 1px solid var(--line-strong) !important;
+}
+
+/* Security Audit Colors Override */
+.stat-icon.red { background: var(--danger-soft) !important; color: var(--danger) !important; }
+.stat-icon.yellow { background: var(--warning-soft) !important; color: var(--warning) !important; }
+.stat-icon.blue { background: var(--accent-soft) !important; color: var(--accent) !important; }
+
+/* Override Cloud inputs to ensure they aren't white */
+.cloud-form-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+}

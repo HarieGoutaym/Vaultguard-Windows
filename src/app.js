@@ -49,63 +49,53 @@ const el = (tag, attrs = {}, ...children) => {
 const _svg = (path, size = 14, fill = 'none', strokeWidth = 2) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${fill}" stroke="currentColor" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
 
-const Icon = {
-  eye:        _svg('<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'),
-  eyeOff:     _svg('<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'),
-  copy:       _svg('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
-  edit:       _svg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
-  trash:      _svg('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'),
-  plus:       _svg('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>'),
-  minus:      _svg('<line x1="5" y1="12" x2="19" y2="12"/>'),
-  search:     _svg('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>'),
-  lock:       _svg('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
-  unlock:     _svg('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>'),
-  shield:     _svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'),
-  shieldCheck:_svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>'),
-  cloud:      _svg('<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>'),
-  cloudOff:   _svg('<path d="M22.61 16.95A5 5 0 0 0 18 10h-1.26a8 8 0 0 0-7.05-6M5 5a8 8 0 0 0 4 15h9a5 5 0 0 0 1.7-.3"/><line x1="1" y1="1" x2="23" y2="23"/>'),
-  settings:   _svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'),
-  star:       _svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>', 12, 'currentColor', 0),
-  refresh:    _svg('<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>'),
-  generate:   _svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
-  history:    _svg('<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.54"/><polyline points="12 7 12 12 15 14"/>'),
-  link:       _svg('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'),
-  key:        _svg('<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>'),
-  x:          _svg('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
-  check:      _svg('<polyline points="20 6 9 17 4 12"/>'),
-  alert:      _svg('<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
-  warning:    _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'),
-  info:       _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'),
-  grid:       _svg('<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>'),
-  heart:      _svg('<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>', 12, 'currentColor', 0),
-  // Sidebar / nav
-  vault:      _svg('<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/>'),
-  clock:      _svg('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'),
-  zap:        _svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
-  list:       _svg('<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>'),
-  folder:     _svg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
-  // Entry types
-  user:       _svg('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'),
-  creditCard: _svg('<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>'),
-  fileText:   _svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'),
-  badge:      _svg('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2"/><line x1="14" y1="9" x2="18" y2="9"/><line x1="14" y1="13" x2="17" y2="13"/><line x1="6" y1="16" x2="18" y2="16"/>'),
-  terminal:   _svg('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'),
-  bolt:       _svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
-  bitcoin:    _svg('<circle cx="12" cy="12" r="10"/><path d="M9 8h5a2.5 2.5 0 0 1 0 5H9zm0 5h6a2.5 2.5 0 0 1 0 5H9zM10 6v2M14 6v2M10 16v2M14 16v2"/>'),
-  scroll:     _svg('<path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/>'),
-  // Tag & misc
-  tag:        _svg('<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>'),
-  globe:      _svg('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'),
-  upload:     _svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>'),
-  download:   _svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'),
-  // Audit log glyphs
-  plusCircle: _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>'),
-  flame:      _svg('<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>'),
-  rotate:     _svg('<polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>'),
-  swatch:     _svg('<path d="M12 2v6m0 8v6M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24M2 12h6m8 0h6M4.93 19.07l4.24-4.24m5.66-5.66l4.24-4.24"/>'),
-  palette:    _svg('<circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125 0-.939.755-1.687 1.687-1.687h1.989c3.107 0 5.55-2.443 5.55-5.55C22 6.5 17.5 2 12 2z"/>'),
-};
 
+const Icon = {
+  vault: _svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/>', 18),
+  star: _svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>', 18),
+  clock: _svg('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>', 18),
+  warning: _svg('<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', 18),
+  alert: _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>', 18),
+  plus: _svg('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>', 18),
+  zap: _svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>', 18),
+  shield: _svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>', 18),
+  cloud: _svg('<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>', 18),
+  list: _svg('<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>', 18),
+  settings: _svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>', 18),
+  lock: _svg('<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>', 18),
+  users: _svg('<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>', 18),
+  shieldCheck: _svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>', 18),
+  search: _svg('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>', 18),
+  user: _svg('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>', 18),
+  key: _svg('<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>', 18),
+  globe: _svg('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>', 18),
+  creditCard: _svg('<rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>', 18),
+  fileText: _svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>', 18),
+  badge: _svg('<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><circle cx="12" cy="11" r="3"/><rect x="9" y="16" width="6" height="2" rx="1"/>', 18),
+  terminal: _svg('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>', 18),
+  bolt: _svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>', 18),
+  file: _svg('<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>', 18),
+  eye: _svg('<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>', 18),
+  eyeOff: _svg('<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>', 18),
+  copy: _svg('<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>', 18),
+  more: _svg('<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>', 18),
+  trash: _svg('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>', 18),
+  edit: _svg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>', 18),
+  check: _svg('<polyline points="20 6 9 17 4 12"/>', 18),
+  x: _svg('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>', 18),
+  
+  bitcoin: _svg('<circle cx="12" cy="12" r="10"/><path d="M16 8h-6v8h6a4 4 0 0 0 0-8"/><path d="M14 12H9"/><path d="M11 6v12"/><path d="M14 6v12"/>', 18),
+  generate: _svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>', 18),
+  history: _svg('<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.54"/>', 18),
+  info: _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>', 18),
+  link: _svg('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>', 18),
+  rotate: _svg('<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><polyline points="3 3 3 8 8 8"/>', 18),
+  scroll: _svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>', 18),
+  tag: _svg('<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>', 18),
+  unlock: _svg('<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>', 18),
+
+  refresh: _svg('<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>', 18)
+};
 // ─── Entry-type icon ──────────────────────────────────────────────────────────
 function getTypeIcon(type) {
   const map = {
@@ -129,7 +119,7 @@ function getTypeEmoji(type) { return getTypeIcon(type); }
 // category color so emoji and modern icons share a visual language.
 function categoryIconHtml(cat, size = 22) {
   const color = cat?.color || 'var(--accent-primary)';
-  const icon  = cat?.icon  || Icon.folder;
+  const icon  = cat?.icon  || Icon.file;
   return `<span class="cat-icon-tile" style="--cat-color:${color};width:${size}px;height:${size}px">${typeof icon === 'string' && icon.startsWith('<svg') ? icon : escHtml(icon)}</span>`;
 }
 
@@ -206,10 +196,10 @@ function renderUnlockScreen() {
       <div class="auth-card">
         <div class="auth-logo">
           <div class="auth-logo-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z" fill="currentColor"/>
-              <rect x="10" y="17" width="4" height="2" rx="1" fill="currentColor" opacity="0.7"/>
-              <circle cx="12" cy="9" r="2" fill="white" opacity="0.9"/>
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2 L28 6 V15 C28 22.5 22.5 28 16 30 C9.5 28 4 22.5 4 15 V6 Z" fill="white" fill-opacity="0.95"/>
+              <circle cx="16" cy="15" r="3.2" fill="currentColor"/>
+              <rect x="14.5" y="15" width="3" height="6" rx="1.2" fill="currentColor"/>
             </svg>
           </div>
         </div>
@@ -315,9 +305,10 @@ function renderSetupScreen() {
       <div class="auth-card" style="width:460px;max-height:80vh;overflow-y:auto">
         <div class="auth-logo">
           <div class="auth-logo-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z" fill="currentColor"/>
-              <circle cx="12" cy="9" r="2" fill="white" opacity="0.9"/>
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2 L28 6 V15 C28 22.5 22.5 28 16 30 C9.5 28 4 22.5 4 15 V6 Z" fill="white" fill-opacity="0.95"/>
+              <circle cx="16" cy="15" r="3.2" fill="currentColor"/>
+              <rect x="14.5" y="15" width="3" height="6" rx="1.2" fill="currentColor"/>
             </svg>
           </div>
         </div>
@@ -391,7 +382,7 @@ function renderSetupScreen() {
     strengthTimeout = setTimeout(async () => {
       const pw = $('#setup-password').value;
       if (!pw) return;
-      const result = await API.passwords.strength(pw);
+      const result = await API.vault.strength(pw);
       const bar = $('#pw-strength-bar');
       const label = $('#pw-strength-label');
       const entropyDiv = $('#pw-entropy');
@@ -422,7 +413,7 @@ function renderSetupScreen() {
     if (!password) { errDiv.textContent = 'Please create a master password'; errDiv.classList.remove('hidden'); return; }
     if (password !== confirm) { $('#confirm-error').classList.remove('hidden'); return; }
     
-    const strength = await API.passwords.strength(password);
+    const strength = await API.vault.strength(password);
     if (strength.score < 2) {
       errDiv.textContent = 'Please use a stronger master password (at least "fair" strength)';
       errDiv.classList.remove('hidden');
@@ -467,6 +458,7 @@ function renderMainApp() {
     <div id="screen-main" class="screen active">
       <!-- Sidebar -->
       <aside class="sidebar">
+        <div class="sidebar-sections-scroll">
         <div class="sidebar-section">
           <div class="sidebar-label">Views</div>
           <div class="sidebar-item active" data-view="all">
@@ -504,6 +496,22 @@ function renderMainApp() {
         </div>
 
         <div class="sidebar-section">
+          <div class="sidebar-label">Team & Sharing <span class="badge-team">PRO</span></div>
+          <div class="sidebar-item" data-view="team-vaults">
+            <span class="item-icon">${Icon.users || Icon.vault}</span>
+            Team Vaults
+          </div>
+          <div class="sidebar-item" data-view="access-roles">
+            <span class="item-icon">${Icon.shieldCheck || Icon.shield}</span>
+            Access & Roles
+          </div>
+          <div class="sidebar-item" data-view="data-breach">
+            <span class="item-icon">${Icon.alert || Icon.alert}</span>
+            Breach Scanner
+          </div>
+        </div>
+        
+        <div class="sidebar-section">
           <div class="sidebar-label">Tools</div>
           <div class="sidebar-item" data-view="generator">
             <span class="item-icon">${Icon.zap}</span>
@@ -526,7 +534,7 @@ function renderMainApp() {
             Settings
           </div>
         </div>
-
+        </div>
         <div class="sidebar-bottom">
           <button class="sidebar-action-btn" id="sync-btn" title="Sync">
             ${Icon.cloud} Sync
@@ -558,6 +566,8 @@ function renderMainApp() {
 
         <!-- Views -->
         <div style="flex:1;display:flex;overflow:hidden">
+          <!-- Enterprise View Container -->
+          <div id="view-enterprise" class="view" style="width:100%;overflow-y:auto;padding:24px;"></div>
           <!-- Entry List View -->
           <div id="view-entries" class="view active">
             <div class="entry-list-panel">
@@ -670,6 +680,22 @@ function renderMainApp() {
 
 // ─── Navigation ───────────────────────────────────────────────────────────────
 function navigateTo(view) {
+  if (['team-vaults', 'access-roles', 'data-breach'].includes(view)) {
+    $$('.sidebar-item').forEach(el => el.classList.remove('active'));
+    let matched = $('.sidebar-item[data-view="'+view+'"]');
+    if(matched) matched.classList.add('active');
+    
+    $$('.view').forEach(v => v.classList.remove('active'));
+    let entView = $('#view-enterprise');
+    entView.classList.add('active');
+    entView.innerHTML = window.renderEnterpriseView(view);
+    return;
+  }
+
+  $$('.sidebar-item').forEach(el => el.classList.remove('active'));
+  const activeItem = $('.sidebar-item[data-view="'+view+'"]');
+  if (activeItem) activeItem.classList.add('active');
+
   $$('.view').forEach(v => v.classList.remove('active'));
 
   const entryViews = ['all', 'favorites', 'recent', 'weak', 'breached'];
@@ -678,13 +704,14 @@ function navigateTo(view) {
     $('#view-entries').classList.add('active');
     renderEntryList();
   } else {
-    const viewEl = $(`#view-${view}`);
+    const viewEl = $('#view-' + view);
     if (viewEl) {
       viewEl.classList.add('active');
-      if (view === 'audit-log') loadAuditLog();
-      if (view === 'security') loadSecurityAudit();
-      if (view === 'cloud') loadCloudStatus();
-      if (view === 'settings') loadSettings();
+      if (view === 'generator') renderGeneratorView();
+      if (view === 'security') renderSecurityView();
+      if (view === 'cloud') renderCloudView();
+      if (view === 'settings') renderSettingsView && renderSettingsView();
+      if (view === 'audit-log') renderAuditLogView && renderAuditLogView();
     }
   }
 }
@@ -704,7 +731,7 @@ function renderCategoryList() {
       class: 'sidebar-item category-item',
       'data-view': `cat-${cat.id}`,
     });
-    const tile = `<span class="cat-icon-tile" style="--cat-color:${cat.color || '#7c5cfc'}">${escHtml(cat.icon || Icon.folder).startsWith('&lt;svg') ? (cat.icon || Icon.folder) : escHtml(cat.icon || '📁')}</span>`;
+    const tile = `<span class="cat-icon-tile" style="--cat-color:${cat.color || '#2563eb'}">${escHtml(cat.icon || Icon.file).startsWith('&lt;svg') ? (cat.icon || Icon.file) : escHtml(cat.icon || '📁')}</span>`;
     item.innerHTML = `
       <span class="item-icon">${tile}</span>
       <span class="category-name">${escHtml(cat.name)}</span>
@@ -737,8 +764,8 @@ const CATEGORY_ICONS = [
   '✈️','🚗','💰','🏦','📷','💻','🛡️','📱','🎓','🎁','💪','☕',
 ];
 const CATEGORY_COLORS = [
-  '#7c5cfc','#00d4ff','#00d68f','#ffb300','#ff4757','#ff7b72',
-  '#ec4899','#a78bfa','#22d3ee','#facc15','#34d399','#f472b6',
+  '#2563eb','#0ea5e9','#06b6d4','#10b981','#22c55e','#84cc16',
+  '#eab308','#f59e0b','#f97316','#ef4444','#ec4899','#64748b',
 ];
 
 function showCategoryFormModal(existing = null) {
@@ -948,39 +975,109 @@ function createEntryListItem(entry) {
   return item;
 }
 
-// Named global — avoids quote-escaping corruption inside inline onerror attributes
+// ─── Favicon helpers ──────────────────────────────────────────────────────────
+// In-memory cache so we don't re-probe the same domain more than once per session.
+// Session favicon cache: domain → 'gstatic' | 'google' | 'ddg' | 'letter'
+const _faviconCache = new Map();
+
+/** Called inline from onerror — must be a named global (no closure escaping). */
 window._faviconFallback = function(img, domain) {
-  if (!img.dataset.ddgTried) {
-    img.dataset.ddgTried = '1';
+  if (!img.dataset.step) img.dataset.step = '0';
+  const step = parseInt(img.dataset.step);
+  img.dataset.step = String(step + 1);
+  if (step === 0) {
+    // Step 1 → classic Google S2 API
+    img.src = 'https://www.google.com/s2/favicons?domain=' + encodeURIComponent(domain) + '&sz=32';
+  } else if (step === 1) {
+    // Step 2 → DuckDuckGo CDN (no tracking)
     img.src = 'https://icons.duckduckgo.com/ip3/' + domain + '.ico';
-    return;
+  } else {
+    // Step 3 → local letter-avatar (zero network, always works)
+    img.onerror = null;
+    img.src = _letterAvatarDataUrl(domain);
+    img.style.padding = '0';
+    img.style.opacity = '1';
+    _faviconCache.set(domain, 'letter');
   }
-  // Final fallback: letter avatar generated locally, no network needed
-  const letter = domain.replace(/^www\./, '')[0]?.toUpperCase() || '?';
-  const hue = [...domain].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
-  img.onerror = null;
-  img.src = 'data:image/svg+xml,' + encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">' +
-    '<rect width="32" height="32" rx="8" fill="hsl(' + hue + ',50%,32%)"/>' +
-    '<text x="16" y="22" font-family="Inter,sans-serif" font-size="16" font-weight="600" ' +
-    'fill="white" text-anchor="middle">' + letter + '</text></svg>'
-  );
 };
 
-function getFaviconHtml(entry) {
+window._faviconLoaded = function(img, domain) {
+  if (domain && !_faviconCache.has(domain)) {
+    const step = parseInt(img.dataset.step || '0');
+    _faviconCache.set(domain, step === 0 ? 'gstatic' : step === 1 ? 'google' : 'ddg');
+  }
+  img.style.opacity = '1';
+};
+
+function _letterAvatarDataUrl(domain) {
+  const base   = domain.replace(/^www\./, '');
+  const letter = base[0]?.toUpperCase() || '?';
+  const hue    = [...base].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
+  const sat    = 45 + (hue % 20);
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">` +
+    `<rect width="32" height="32" rx="8" fill="hsl(${hue},${sat}%,28%)"/>` +
+    `<text x="16" y="22" font-family="Inter,sans-serif" font-size="17" font-weight="700" ` +
+    `fill="white" text-anchor="middle">${letter}</text></svg>`;
+  return 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
+
+/**
+ * Returns an HTML string for the favicon tile of an entry.
+ * Fallback chain:
+ *   1. Google FaviconV2 (t2.gstatic.com) — highest quality, supports SVG/PNG
+ *   2. Google S2 favicons API (www.google.com/s2/favicons)
+ *   3. DuckDuckGo CDN (icons.duckduckgo.com) — no tracking
+ *   4. Letter-avatar generated locally — zero network, always succeeds
+ *
+ * All via plain <img> tags — no CORS restrictions on image loads.
+ */
+function getFaviconHtml(entry, size = 32) {
   if (entry.url) {
     try {
-      const raw    = entry.url.startsWith('http') ? entry.url : `https://${entry.url}`;
-      const host   = new URL(raw).hostname;
-      // Validate: only [a-z0-9.-] hostnames pass through unescaped — anything
-      // else falls through to the safe SVG type-glyph.
+      const raw  = entry.url.startsWith('http') ? entry.url : `https://${entry.url}`;
+      const host = new URL(raw).hostname;
+      // Reject hostnames with characters outside [a-z0-9.-] to prevent attribute injection
       if (!/^[a-z0-9.-]+$/i.test(host)) throw new Error('bad host');
-      const domain = encodeURIComponent(host);
-      return `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=32" onerror="window._faviconFallback(this,'${escHtml(host).replace(/'/g, '&#039;')}')" style="width:32px;height:32px;border-radius:6px" />`;
-    } catch {}
+
+      const safeHost = escHtml(host).replace(/'/g, '&#039;');
+      const domain   = encodeURIComponent(host);
+      const px       = size + 'px';
+
+      // Already resolved to letter-avatar this session — skip network
+      if (_faviconCache.get(host) === 'letter') {
+        return `<img src="${_letterAvatarDataUrl(host)}" style="width:${px};height:${px};border-radius:6px;opacity:1" alt="" />`;
+      }
+
+      // Known-good source from a previous render this session
+      const known = _faviconCache.get(host);
+      let src;
+      if (known === 'ddg') {
+        src = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+      } else if (known === 'google') {
+        src = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+      } else {
+        // Default first attempt: Google FaviconV2 — best quality
+        src = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=${size}`;
+      }
+
+      return (
+        `<img ` +
+        `src="${src}" ` +
+        `loading="lazy" ` +
+        `alt="" ` +
+        `data-step="0" ` +
+        `style="width:${px};height:${px};border-radius:6px;opacity:0;transition:opacity 0.2s ease" ` +
+        `onload="window._faviconLoaded(this,'${safeHost}')" ` +
+        `onerror="window._faviconFallback(this,'${safeHost}')" ` +
+        `/>`
+      );
+    } catch { /* fall through to type-glyph */ }
   }
+  // No URL — render a type-icon glyph (no network)
   return `<span class="entry-type-icon">${getTypeIcon(entry.entryType)}</span>`;
 }
+
 
 // ─── Entry Detail ─────────────────────────────────────────────────────────────
 async function selectEntry(entry) {
@@ -999,7 +1096,7 @@ function renderEntryDetail(entry) {
   const panel = $('#detail-panel');
   if (!panel) return;
   
-  const favicon = getFaviconHtml(entry);
+  const favicon = getFaviconHtml(entry, 48);
   const isLogin = entry.entryType !== 'note' && entry.entryType !== 'card';
   
   panel.innerHTML = `
@@ -1412,7 +1509,7 @@ function showEntryFormModal(entry, prefill = {}) {
     strengthTimeout = setTimeout(async () => {
       const pw = $('#ef-password').value;
       if (!pw) return;
-      const result = await API.passwords.strength(pw);
+      const result = await API.vault.strength(pw);
       $('#ef-strength-bar').dataset.strength = result.label;
       $('#ef-strength-label').textContent = result.label.replace('-', ' ');
       $('#ef-strength-label').dataset.strength = result.label;
@@ -1448,7 +1545,7 @@ function showEntryFormModal(entry, prefill = {}) {
 
     // Get password strength
     if (data.password) {
-      const s = await API.passwords.strength(data.password);
+      const s = await API.vault.strength(data.password);
       data.passwordStrength = s.label;
     }
 
@@ -1478,7 +1575,7 @@ function showEntryFormModal(entry, prefill = {}) {
 // ─── Password Generator View ──────────────────────────────────────────────────
 function renderGeneratorView() {
   return `
-    <div style="padding:24px;width:100%;overflow-y:auto">
+    <div class="pane-view">
       <div class="settings-section-title">Password Generator</div>
       <div class="settings-section-desc">Generate cryptographically secure passwords</div>
 
@@ -1664,7 +1761,7 @@ function initGenerator() {
 // ─── Security Audit View ──────────────────────────────────────────────────────
 function renderSecurityView() {
   return `
-    <div style="padding:24px;width:100%;overflow-y:auto">
+    <div class="pane-view">
       <div class="settings-section-title">Security Audit</div>
       <div class="settings-section-desc">Identify and fix security issues in your vault</div>
       
@@ -1803,137 +1900,400 @@ async function loadSecurityAudit() {
 // ─── Cloud View ───────────────────────────────────────────────────────────────
 function renderCloudView() {
   return `
-    <div style="padding:24px;width:100%;overflow-y:auto">
+    <div class="cloud-page">
       <div class="settings-section-title">Cloud Sync</div>
-      <div class="settings-section-desc">Zero-knowledge encrypted sync via Google Cloud</div>
-      
-      <div style="max-width:500px">
-        <div class="card" style="margin-bottom:16px">
-          <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6;display:flex;gap:8px;align-items:flex-start">
-            <span style="flex-shrink:0;color:var(--accent-secondary);margin-top:1px">${Icon.shield}</span>
-            <span>Your vault is encrypted locally before syncing. Google only stores encrypted blobs —
-            it's impossible for anyone without your master password to read your data.</span>
-          </div>
-          <div id="cloud-status-detail"></div>
+      <div class="settings-section-desc">End-to-end encrypted. Only ciphertext leaves this device.</div>
+
+      <!-- Compact status strip (no big icon) -->
+      <div class="cloud-status-strip" id="cloud-status-strip">
+        <span class="pulse-dot"></span>
+        <div class="status-text">
+          <div class="status-title" id="cloud-status-title">Loading…</div>
+          <div class="status-sub" id="cloud-status-sub">Checking connection</div>
+        </div>
+      </div>
+
+      <div class="cloud-chips">
+        <div class="cloud-chip ok">${Icon.shieldCheck}<span>AES-256-GCM</span></div>
+        <div class="cloud-chip ok">${Icon.key}<span>Argon2id KDF</span></div>
+        <div class="cloud-chip">${Icon.cloud}<span>Firebase</span></div>
+        <div class="cloud-chip">${Icon.shield}<span>Zero-knowledge</span></div>
+      </div>
+
+      <div id="cloud-connect-form">
+        <div class="cloud-segments">
+          <button type="button" class="cloud-segment active" data-mode="signin">Sign In</button>
+          <button type="button" class="cloud-segment" data-mode="signup">Create Account</button>
         </div>
 
-        <div id="cloud-connect-form">
-          <div class="section-header">Google Firebase Configuration</div>
-          <div class="form-group">
-            <label class="form-label">Firebase API Key</label>
-            <input type="text" id="firebase-api-key" class="form-input" placeholder="AIza..." />
+        <div class="cloud-form-card">
+          <div class="cloud-form-section">
+            <div class="cloud-form-section-head">
+              <span class="cloud-form-section-title">Firebase Project</span>
+              <button type="button" class="cloud-help-link" id="cloud-setup-help">${Icon.info}<span>Setup guide</span></button>
+            </div>
+            <div class="cloud-form-grid">
+              <div class="form-group full">
+                <label class="form-label">API Key</label>
+                <input type="text" id="firebase-api-key" class="form-input" placeholder="AIzaSy…" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Project ID</label>
+                <input type="text" id="firebase-project-id" class="form-input" placeholder="my-vault-app" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Auth Domain</label>
+                <input type="text" id="firebase-auth-domain" class="form-input" placeholder="auto" autocomplete="off" spellcheck="false" />
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Project ID</label>
-            <input type="text" id="firebase-project-id" class="form-input" placeholder="my-vaultguard-project" />
+
+          <div class="cloud-form-section">
+            <div class="cloud-form-section-head">
+              <span class="cloud-form-section-title">Account</span>
+            </div>
+            <div class="cloud-form-grid">
+              <div class="form-group full">
+                <label class="form-label">Email</label>
+                <input type="email" id="firebase-email" class="form-input" placeholder="you@example.com" autocomplete="off" />
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Firebase Password <span style="color:var(--text-tertiary);font-weight:400;margin-left:6px">— not your vault password</span></label>
+                <input type="password" id="firebase-password" class="form-input" autocomplete="new-password" />
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Auth Domain</label>
-            <input type="text" id="firebase-auth-domain" class="form-input" placeholder="my-project.firebaseapp.com" />
-          </div>
-          <div class="divider"></div>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input type="email" id="firebase-email" class="form-input" placeholder="you@email.com" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Password</label>
-            <input type="password" id="firebase-password" class="form-input" />
-          </div>
-          <div style="display:flex;gap:10px">
-            <button class="btn btn-primary" id="cloud-signin-btn">Sign In</button>
-            <button class="btn btn-secondary" id="cloud-signup-btn">Create Account</button>
+
+          <div class="cloud-actions">
+            <button class="btn btn-primary" id="cloud-submit-btn">Sign In</button>
           </div>
         </div>
+      </div>
 
-        <div id="cloud-connected-panel" style="display:none">
-          <div style="display:flex;gap:10px;margin-bottom:12px">
-            <button class="btn btn-primary" id="cloud-sync-now-btn">${Icon.cloud} Sync Now</button>
-            <button class="btn btn-danger" id="cloud-disconnect-btn">Disconnect</button>
+      <div id="cloud-connected-panel" style="display:none">
+        <div class="cloud-stats-grid">
+          <div class="cloud-stat up"><div class="cloud-stat-value" id="stat-pushed">0</div><div class="cloud-stat-label">Pushed</div></div>
+          <div class="cloud-stat down"><div class="cloud-stat-value" id="stat-pulled">0</div><div class="cloud-stat-label">Pulled</div></div>
+          <div class="cloud-stat del"><div class="cloud-stat-value" id="stat-deleted">0</div><div class="cloud-stat-label">Deleted</div></div>
+          <div class="cloud-stat conf"><div class="cloud-stat-value" id="stat-conflicts">0</div><div class="cloud-stat-label">Conflicts</div></div>
+        </div>
+
+        <div class="cloud-progress-track" id="cloud-progress-track"><div class="cloud-progress-bar"></div></div>
+        <div class="cloud-progress-msg" id="cloud-progress"></div>
+        <div class="cloud-last-sync" id="last-sync-info">${Icon.clock}<span>Last synced: never</span></div>
+
+        <div class="cloud-toggle-row">
+          <div class="cloud-toggle-label">
+            ${Icon.refresh}
+            <div>
+              <div class="cloud-toggle-text-main">Auto-sync</div>
+              <div class="cloud-toggle-text-sub">Sync every 5 minutes while unlocked</div>
+            </div>
           </div>
-          <div id="last-sync-info" style="font-size:12px;color:var(--text-muted)"></div>
+          <div class="toggle-switch on" id="cloud-autosync-toggle" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:12px">
+          <button class="btn btn-primary" id="cloud-sync-now-btn" style="flex:1;height:42px">${Icon.cloud} Sync Now</button>
+        </div>
+
+        <div class="cloud-danger-zone">
+          <div class="left">
+            <div class="title">Disconnect cloud</div>
+            <div class="sub">Removes credentials from this device. Encrypted backup in Firebase is preserved.</div>
+          </div>
+          <button class="btn btn-danger" id="cloud-disconnect-btn">Disconnect</button>
         </div>
       </div>
     </div>
   `;
 }
 
+// ─── Cloud helpers ────────────────────────────────────────────────────────────
+let _cloudListenersRegistered = false;
+function _registerCloudListeners() {
+  if (_cloudListenersRegistered || !API.cloud.onProgress) return;
+  _cloudListenersRegistered = true;
+  API.cloud.onProgress(({ stage, msg }) => {
+    const track = document.getElementById('cloud-progress-track');
+    const el    = document.getElementById('cloud-progress');
+    if (track) track.classList.add('visible');
+    if (el) el.textContent = msg || stage || '';
+  });
+  API.cloud.onAutoSyncDone?.(({ stats }) => {
+    state.cloudStatus = { ...(state.cloudStatus || {}), lastSync: Date.now() };
+    updateCloudBadge();
+    if (document.getElementById('last-sync-info')) loadCloudStatus();
+  });
+  API.cloud.onAutoSyncFail?.(({ error }) => {
+    const el = document.getElementById('cloud-progress');
+    if (el) el.textContent = 'Auto-sync failed: ' + error;
+  });
+}
+
+function _relativeTime(ts) {
+  if (!ts) return 'never';
+  const d = Math.floor((Date.now() - ts) / 1000);
+  if (d < 5)    return 'just now';
+  if (d < 60)   return d + 's ago';
+  if (d < 3600) return Math.floor(d/60) + 'm ago';
+  if (d < 86400) return Math.floor(d/3600) + 'h ago';
+  return Math.floor(d/86400) + 'd ago';
+}
+
 async function loadCloudStatus() {
+  _registerCloudListeners();
   const status = await API.cloud.status();
   state.cloudStatus = status;
   updateCloudBadge();
 
-  const detailEl = $('#cloud-status-detail');
-  const formEl = $('#cloud-connect-form');
+  const strip   = $('#cloud-status-strip');
+  const title   = $('#cloud-status-title');
+  const sub     = $('#cloud-status-sub');
+  const formEl  = $('#cloud-connect-form');
   const panelEl = $('#cloud-connected-panel');
-
-  if (!detailEl) return;
+  if (!strip) return;
 
   if (status.connected) {
-    detailEl.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;color:var(--accent-success)">
-        <div class="cloud-dot" style="background:var(--accent-success)"></div>
-        Connected as ${escHtml(status.email || '')}
-      </div>
-    `;
+    strip.classList.add('connected');
+    title.textContent = `Connected · ${status.email || ''}`;
+    sub.textContent   = `${status.projectId || ''} · ${(status.uid || '').slice(0, 16)}…`;
     formEl.style.display = 'none';
     panelEl.style.display = 'block';
-    if (status.lastSync) {
-      $('#last-sync-info').textContent = `Last synced: ${formatDate(new Date(status.lastSync).getTime())}`;
-    }
+
+    const refreshLastSync = () => {
+      const info = $('#last-sync-info');
+      if (info) info.innerHTML = `${Icon.clock}<span>Last synced: ${_relativeTime(status.lastSync)}</span>`;
+    };
+    refreshLastSync();
+    if (window._lastSyncTimer) clearInterval(window._lastSyncTimer);
+    window._lastSyncTimer = setInterval(refreshLastSync, 30_000);
+
+    const toggle = $('#cloud-autosync-toggle');
+    const setToggle = (on) => {
+      toggle.classList.toggle('on', on);
+      toggle.setAttribute('aria-checked', on ? 'true' : 'false');
+    };
+    setToggle(status.autoSync !== false);
+    const toggleHandler = async () => {
+      status.autoSync = status.autoSync === false ? true : false;
+      setToggle(status.autoSync);
+      await API.settings.set({ cloudAutoSync: status.autoSync });
+      toast('Auto-sync ' + (status.autoSync ? 'enabled' : 'disabled'), 'info');
+    };
+    toggle.onclick = toggleHandler;
+    toggle.onkeydown = (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleHandler(); } };
 
     $('#cloud-sync-now-btn').onclick = async () => {
+      const btn   = $('#cloud-sync-now-btn');
+      const track = $('#cloud-progress-track');
+      btn.disabled = true;
+      btn.innerHTML = `${Icon.cloud} Syncing…`;
+      track?.classList.add('visible');
       const result = await API.cloud.sync();
+      track?.classList.remove('visible');
+      btn.disabled = false;
+      btn.innerHTML = `${Icon.cloud} Sync Now`;
+      $('#cloud-progress').textContent = '';
       if (result.success) {
-        toast(`Synced ${result.synced} entries`, 'success');
-        $('#last-sync-info').textContent = `Last synced: just now`;
-      } else toast(result.error, 'error');
+        status.lastSync = result.lastSync || Date.now();
+        const set = (id, v) => { const el = $(id); if (el) el.textContent = v || 0; };
+        set('#stat-pushed',    result.pushedEntries);
+        set('#stat-pulled',    result.pulledEntries);
+        set('#stat-deleted',  (result.deletedLocal || 0) + (result.deletedRemote || 0));
+        set('#stat-conflicts', result.conflicts);
+        toast(`Sync complete in ${Math.round((result.durationMs||0)/100)/10}s`, 'success');
+        refreshLastSync();
+        try { await loadAllEntries?.(); renderEntryList?.(); } catch {}
+      } else {
+        toast(result.error || 'Sync failed', 'error');
+      }
     };
 
-    $('#cloud-disconnect-btn').onclick = async () => {
-      await API.cloud.disconnect();
-      state.cloudStatus = { connected: false };
-      updateCloudBadge();
-      loadCloudStatus();
+    $('#cloud-disconnect-btn').onclick = () => {
+      showConfirmModal('Disconnect cloud sync?',
+        'Your local vault stays intact. The encrypted copy in Firebase is preserved.',
+        async () => {
+          await API.cloud.disconnect();
+          state.cloudStatus = { connected: false };
+          updateCloudBadge();
+          loadCloudStatus();
+        });
     };
   } else {
-    detailEl.innerHTML = `<div style="color:var(--text-muted);font-size:12px">Not connected</div>`;
+    strip.classList.remove('connected');
+    title.textContent = 'Not connected';
+    sub.textContent   = 'Sign in with a Firebase account to enable sync';
     formEl.style.display = 'block';
     panelEl.style.display = 'none';
 
-    async function doConnect(action) {
+    let mode = 'signin';
+    const segs = $$('.cloud-segment');
+    segs.forEach(b => {
+      b.onclick = () => {
+        segs.forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        mode = b.dataset.mode;
+        const sub = $('#cloud-submit-btn');
+        if (sub) sub.textContent = mode === 'signup' ? 'Create Account' : 'Sign In';
+      };
+    });
+
+    const help = $('#cloud-setup-help');
+    if (help) help.onclick = (e) => { e.preventDefault(); showFirebaseSetupModal(); };
+
+    $('#cloud-submit-btn').onclick = async () => {
       const config = {
-        apiKey: $('#firebase-api-key').value,
-        projectId: $('#firebase-project-id').value,
-        authDomain: $('#firebase-auth-domain').value,
-        email: $('#firebase-email').value,
-        password: $('#firebase-password').value,
-        action,
+        apiKey:     $('#firebase-api-key').value.trim(),
+        projectId:  $('#firebase-project-id').value.trim(),
+        authDomain: $('#firebase-auth-domain').value.trim(),
+        email:      $('#firebase-email').value.trim(),
+        password:   $('#firebase-password').value,
+        action:     mode,
       };
       if (!config.apiKey || !config.projectId || !config.email || !config.password) {
-        toast('Please fill in all fields', 'error');
+        toast('Please fill all required fields', 'error');
         return;
       }
+      const btn = $('#cloud-submit-btn');
+      btn.disabled = true;
+      const origLabel = btn.textContent;
+      btn.innerHTML = `<span class="spinner"></span> Connecting…`;
       const result = await API.cloud.connect(config);
+      btn.disabled = false;
+      btn.textContent = origLabel;
       if (result.success) {
         state.cloudStatus = await API.cloud.status();
         updateCloudBadge();
-        toast('Connected to Google Cloud!', 'success');
+        toast('Connected — pushing initial vault…', 'success');
         loadCloudStatus();
+        setTimeout(() => $('#cloud-sync-now-btn')?.click(), 700);
       } else {
-        toast(result.error, 'error');
+        toast(result.error || 'Connection failed', 'error');
       }
-    }
-
-    $('#cloud-signin-btn').onclick = () => doConnect('signin');
-    $('#cloud-signup-btn').onclick = () => doConnect('signup');
+    };
   }
 }
+
+// ─── Firebase setup guide modal ────────────────────────────────────────────────
+function showFirebaseSetupModal() {
+  const modal = el('div', { class: 'modal' });
+  modal.innerHTML = `
+    <div class="modal-header">
+      <div class="modal-title">${Icon.cloud} Firebase Setup — 2 minutes</div>
+      <button class="btn-icon-sm" id="fb-help-close" aria-label="Close">${Icon.x}</button>
+    </div>
+    <div class="modal-body">
+      <div class="setup-guide">
+        <div class="setup-step">
+          <div class="setup-step-num">1</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Create a Firebase project</div>
+            <div class="setup-step-desc">Open the Firebase console and click <b>Add project</b>. The free Spark tier covers personal vaults.</div>
+            <button class="setup-step-action" data-open="https://console.firebase.google.com/">${Icon.link}<span>Open Firebase Console</span></button>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">2</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Enable Email/Password authentication</div>
+            <div class="setup-step-desc">In your project: <code>Build → Authentication → Get started</code>, enable <b>Email/Password</b>.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">3</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Create the Firestore database</div>
+            <div class="setup-step-desc">Go to <code>Build → Firestore Database → Create database</code>. Start in <b>production mode</b>.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">4</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Copy your apiKey and projectId</div>
+            <div class="setup-step-desc"><code>Project settings ⚙ → General → Your apps</code>, click <code>&lt;/&gt;</code>, register an app. Copy the <b>apiKey</b> and <b>projectId</b> into the form.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">5</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Lock down Firestore (recommended)</div>
+            <div class="setup-step-desc">Open <code>Firestore → Rules</code> and paste the contents of <code>firestore.rules</code>.</div>
+            <button class="setup-step-action" id="copy-rules-btn">${Icon.copy}<span>Copy security rules</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="setup-footer-note">
+        ${Icon.shieldCheck}
+        <span><b>Your master password never leaves this device.</b> Firebase only stores opaque AES-256-GCM ciphertext.</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="fb-help-done">${Icon.check} Got it</button>
+    </div>
+  `;
+  showModal(modal);
+  $('#fb-help-close').onclick = closeModal;
+  $('#fb-help-done').onclick  = closeModal;
+  $$('.setup-step-action[data-open]', modal).forEach(b => {
+    b.onclick = async (e) => {
+      e.preventDefault();
+      const url = b.dataset.open;
+      try {
+        window.open(url, '_blank', 'noopener,noreferrer');
+        toast('Opening in browser…', 'info');
+      } catch {
+        try { await navigator.clipboard.writeText(url); toast('URL copied: ' + url, 'info'); }
+        catch { toast(url, 'info', 6000); }
+      }
+    };
+  });
+  $('#copy-rules-btn').onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(FIRESTORE_RULES_TEXT);
+      toast('Security rules copied to clipboard', 'success');
+    } catch {
+      toast('Open firestore.rules from your VaultGuard folder', 'info');
+    }
+  };
+}
+
+const FIRESTORE_RULES_TEXT = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+    function hasUpdatedAt() {
+      return request.resource.data.clientUpdatedAt is int
+          && request.resource.data.clientUpdatedAt > 0;
+    }
+    function sizeOK() { return request.resource.size() < 1048576; }
+    match /vaults/{uid} {
+      allow read, write: if false;
+      match /meta/{docId} {
+        allow read:  if isOwner(uid);
+        allow write: if isOwner(uid) && sizeOK();
+      }
+      match /entries/{entryId} {
+        allow read:   if isOwner(uid);
+        allow create, update: if isOwner(uid) && sizeOK() && hasUpdatedAt();
+        allow delete: if isOwner(uid);
+      }
+      match /categories/{catId} {
+        allow read:   if isOwner(uid);
+        allow create, update: if isOwner(uid) && sizeOK() && hasUpdatedAt();
+        allow delete: if isOwner(uid);
+      }
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}`;
 
 // ─── Audit Log View ───────────────────────────────────────────────────────────
 function renderAuditLogView() {
   return `
-    <div style="padding:24px;width:100%;overflow-y:auto">
+    <div class="pane-view">
       <div class="settings-section-title">Audit Log</div>
       <div class="settings-section-desc">Track all actions performed on your vault</div>
       <div id="audit-log-list"></div>
@@ -1947,10 +2307,10 @@ async function loadAuditLog() {
   if (!list) return;
 
   const actionIcons = {
-    vault_created: Icon.plusCircle, vault_unlocked: Icon.unlock, vault_locked: Icon.lock,
+    vault_created: Icon.plus, vault_unlocked: Icon.unlock, vault_locked: Icon.lock,
     entry_viewed:  Icon.eye,        entry_created:  Icon.plus,   entry_updated: Icon.edit,
     entry_deleted: Icon.trash,      master_password_changed: Icon.key,
-    category_added: Icon.folder,    category_updated: Icon.edit, category_deleted: Icon.trash,
+    category_added: Icon.file,    category_updated: Icon.edit, category_deleted: Icon.trash,
     vault_change_password_failed: Icon.alert, vault_password_changed: Icon.key,
   };
 
@@ -1969,7 +2329,7 @@ async function loadAuditLog() {
 // ─── Settings View ────────────────────────────────────────────────────────────
 function renderSettingsView() {
   return `
-    <div style="padding:24px;width:100%;overflow-y:auto">
+    <div class="pane-view">
       <div class="settings-section-title">Settings</div>
       <div class="settings-section-desc">Customize VaultGuard's behavior and security</div>
 
@@ -2184,7 +2544,7 @@ function showChangeMasterPasswordModal() {
     if (!next)    { errEl.textContent = 'Enter a new password'; errEl.classList.remove('hidden'); return; }
     if (next !== confirm) { errEl.textContent = 'New passwords do not match'; errEl.classList.remove('hidden'); return; }
 
-    const strength = await API.passwords.strength(next);
+    const strength = await API.vault.strength(next);
     if (strength.score < 2) {
       errEl.textContent = 'New password is too weak — use at least "fair" strength';
       errEl.classList.remove('hidden');

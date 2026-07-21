@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VaultGuard · Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="main.css">
+<link rel="stylesheet" href="premium.css">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  body { user-select: text; }
+  .preview-pane { flex: 1; overflow-y: auto; padding: 28px 32px; }
+  .preview-pane h2 {
+    font-family: var(--f-display);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--t3);
+    margin: 24px 0 12px;
+    font-weight: 700;
+  }
+  .preview-pane h2:first-child { margin-top: 0; }
+  .preview-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px; box-shadow: var(--sh-xs); margin-bottom: 14px; }
+  .preview-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="titlebar">
+    <div class="titlebar-drag-region">
+      <div class="titlebar-logo">
+        <svg width="20" height="20" viewBox="0 0 32 32">
+          <defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1e40af"/></linearGradient></defs>
+          <path d="M16 2 L28 6 V15 C28 22.5 22.5 28 16 30 C9.5 28 4 22.5 4 15 V6 Z" fill="url(#vg)"/>
+          <circle cx="16" cy="15" r="3.2" fill="white"/>
+          <rect x="14.5" y="15" width="3" height="6" rx="1.2" fill="white"/>
+        </svg>
+        Vault<span style="color:var(--accent)">Guard</span>
+      </div>
+    </div>
+    <div class="titlebar-controls">
+      <button class="titlebar-btn">—</button>
+      <button class="titlebar-btn">▢</button>
+      <button class="titlebar-btn close">✕</button>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <div id="screen-main" class="screen active" style="display:flex">
+
+      <aside class="sidebar">
+        <div class="sidebar-sections-scroll">
+          <div class="sidebar-section">
+            <div class="sidebar-label">Vault</div>
+            <div class="sidebar-item active">
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="12" r="4"/></svg></span>
+              All Items
+              <span class="sidebar-count">28</span>
+            </div>
+            <div class="sidebar-item">
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 9 22 9 17 14 18 22 12 18 6 22 7 14 2 9 9 9 12 2"/></svg></span>
+              Favorites
+              <span class="sidebar-count">5</span>
+            </div>
+            <div class="sidebar-item">
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+              Security Audit
+              <span class="sidebar-count">2</span>
+            </div>
+            <div class="sidebar-item">
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+              Generator
+            </div>
+            <div class="sidebar-item">
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></span>
+              Cloud Sync
+              <span class="cloud-badge connected">●</span>
+            </div>
+            <div class="sidebar-item">
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></span>
+              Audit Log
+            </div>
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-label">
+              Categories
+              <button class="sidebar-label-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+            </div>
+            <div class="sidebar-item"><span class="item-icon">🌐</span><span class="category-name">Social Media</span><span class="sidebar-count">8</span></div>
+            <div class="sidebar-item"><span class="item-icon">💳</span><span class="category-name">Finance</span><span class="sidebar-count">3</span></div>
+            <div class="sidebar-item"><span class="item-icon">💼</span><span class="category-name">Work</span><span class="sidebar-count">12</span></div>
+          </div>
+        </div>
+        <div class="sidebar-bottom">
+          <button class="sidebar-action-btn"><span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4"/></svg></span>Settings</button>
+          <button class="sidebar-action-btn danger"><span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>Lock Vault</button>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <div class="toolbar">
+          <div class="search-wrapper">
+            <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input class="search-input" placeholder="Search vault…"/>
+          </div>
+          <div class="toolbar-actions">
+            <button class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              New Item
+            </button>
+          </div>
+        </div>
+
+        <div style="display:flex;flex:1;min-height:0">
+          <section class="entry-list-panel">
+            <div class="entry-list">
+              <div class="entry-item selected">
+                <div class="entry-favicon"><div class="entry-type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div></div>
+                <div class="entry-info">
+                  <div class="entry-title">GitHub</div>
+                  <div class="entry-meta">octocat@example.com</div>
+                </div>
+                <div class="entry-badges"><div class="badge totp">2FA</div><div class="badge fav">★</div></div>
+              </div>
+              <div class="entry-item">
+                <div class="entry-favicon"><div class="entry-type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div></div>
+                <div class="entry-info"><div class="entry-title">Chase Visa</div><div class="entry-meta">•••• 4242</div></div>
+              </div>
+              <div class="entry-item">
+                <div class="entry-favicon"><div class="entry-type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div></div>
+                <div class="entry-info"><div class="entry-title">Twitter</div><div class="entry-meta">@username</div></div>
+                <div class="entry-badges"><div class="badge weak">WEAK</div></div>
+              </div>
+              <div class="entry-item">
+                <div class="entry-favicon"><div class="entry-type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div></div>
+                <div class="entry-info"><div class="entry-title">Notion</div><div class="entry-meta">team@startup.io</div></div>
+              </div>
+              <div class="entry-item">
+                <div class="entry-favicon"><div class="entry-type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 8h5a2.5 2.5 0 0 1 0 5H9zm0 5h6a2.5 2.5 0 0 1 0 5H9z"/></svg></div></div>
+                <div class="entry-info"><div class="entry-title">Bitcoin Wallet</div><div class="entry-meta">seed phrase</div></div>
+                <div class="entry-badges"><div class="badge breach">!</div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-pane">
+            <h2>Cloud Sync (compact, no big icon)</h2>
+            <div class="cloud-status-strip connected">
+              <span class="pulse-dot"></span>
+              <div class="status-text">
+                <div class="status-title">Connected · you@example.com</div>
+                <div class="status-sub">my-vault-app · abc123def456ghi789…</div>
+              </div>
+            </div>
+            <div class="cloud-chips">
+              <div class="cloud-chip ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg><span>AES-256-GCM</span></div>
+              <div class="cloud-chip ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Argon2id</span></div>
+              <div class="cloud-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg><span>Firebase</span></div>
+              <div class="cloud-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span>Zero-knowledge</span></div>
+            </div>
+            <div class="cloud-stats-grid">
+              <div class="cloud-stat up"><div class="cloud-stat-value">42</div><div class="cloud-stat-label">Pushed</div></div>
+              <div class="cloud-stat down"><div class="cloud-stat-value">18</div><div class="cloud-stat-label">Pulled</div></div>
+              <div class="cloud-stat del"><div class="cloud-stat-value">3</div><div class="cloud-stat-label">Deleted</div></div>
+              <div class="cloud-stat conf"><div class="cloud-stat-value">0</div><div class="cloud-stat-label">Conflicts</div></div>
+            </div>
+
+            <h2>Buttons</h2>
+            <div class="preview-card">
+              <div class="preview-row">
+                <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Primary</button>
+                <button class="btn btn-secondary">Secondary</button>
+                <button class="btn btn-ghost">Ghost</button>
+                <button class="btn btn-danger">Delete</button>
+              </div>
+              <div class="preview-row"><button class="btn btn-primary btn-lg">Large primary action</button></div>
+            </div>
+
+            <h2>Inputs &amp; Form</h2>
+            <div class="preview-card">
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input class="form-input" placeholder="you@example.com"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Master Password</label>
+                <div class="form-input-wrapper">
+                  <input type="password" class="form-input password-field" value="my-very-strong-passphrase"/>
+                  <button class="btn-icon-sm input-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                </div>
+              </div>
+              <div class="strength-bar" data-strength="very-strong">
+                <div class="strength-segment"></div><div class="strength-segment"></div><div class="strength-segment"></div><div class="strength-segment"></div><div class="strength-segment"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:8px">
+                <span class="strength-label" data-strength="very-strong">Very Strong</span>
+                <span class="form-hint">~128 bits entropy</span>
+              </div>
+            </div>
+
+            <h2>Entry Detail Fields</h2>
+            <div class="preview-card">
+              <div class="field-group">
+                <div class="field-label">Password</div>
+                <div class="field-value sensitive">
+                  <div class="field-text">3xKp$9mQ&w7Lr2!nVz</div>
+                  <div class="field-actions">
+                    <button class="btn-icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button class="btn-icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                  </div>
+                </div>
+              </div>
+              <div class="field-group">
+                <div class="field-label">2FA Code</div>
+                <div class="totp-widget">
+                  <div class="totp-token">123 456</div>
+                  <div class="totp-timer">
+                    <div class="totp-timer-ring"><div class="totp-timer-track"></div><div class="totp-timer-progress" style="transform:rotate(120deg)"></div></div>
+                    <div class="totp-secs">20s</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h2>Toasts</h2>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="toast success" style="position:static;min-width:0"><span class="toast-icon">✓</span>Copied to clipboard</div>
+              <div class="toast error" style="position:static;min-width:0"><span class="toast-icon">✕</span>Invalid master password</div>
+              <div class="toast info" style="position:static;min-width:0"><span class="toast-icon">ℹ</span>Sync in progress…</div>
+              <div class="toast warning" style="position:static;min-width:0"><span class="toast-icon">⚠</span>2 breached passwords</div>
+            </div>
+
+            <h2>Security Audit Stats</h2>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px">
+              <div class="stat-card">
+                <div class="stat-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></div>
+                <div><div class="stat-value">2</div><div class="stat-label">Breached</div></div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg></div>
+                <div><div class="stat-value">5</div><div class="stat-label">Weak</div></div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/></svg></div>
+                <div><div class="stat-value">8</div><div class="stat-label">Reused</div></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+</body>
+</html>

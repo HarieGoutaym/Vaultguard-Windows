@@ -19,6 +19,7 @@
  */
 
 const { registerAdditionalIPC } = require('./main-additions');
+const { registerCloudIPC }      = require('./main-cloud');
 const { applySecurityHardening }  = require('./security');
 const { app, BrowserWindow, ipcMain, session, dialog, clipboard, nativeTheme, Menu, Tray, shell } = require('electron');
 const path   = require('path');
@@ -47,6 +48,7 @@ let autoLockTimeout = null;
 let settings   = { autoLockMs: 300000, clipboardClearMs: 30000, minimizeToTray: true };
 let db         = null;
 let auditDb    = null;
+let cloudHooks = null;   // { markTombstone, stopAutoSync } — set after IPC reg
 
 // ── Brute-force throttle ────────────────────────────────────────────────────────
 // Tracks failed unlock attempts. Resets only on a successful unlock.
@@ -141,6 +143,44 @@ function initDB() {
   `);
 }
 
+
+// ── One-time color migration: replace legacy violet/cyan category colors with
+//    the new blue-based palette. Runs once after initDB(); leaves user-edited
+//    custom colors untouched.
+function migrateLegacyColors() {
+  if (!db) return;
+  try {
+    const LEGACY_TO_NEW = {
+      '#7c5cfc': '#2563eb',  // violet → blue
+      '#00d68f': '#16a34a',  // teal-green → emerald
+      '#00d4ff': '#0ea5e9',  // electric cyan → sky
+      '#ffb300': '#d97706',  // amber → warm amber
+      '#ff4757': '#dc2626',  // pink-red → red
+    };
+    const done = db.prepare("SELECT value FROM meta WHERE key='colors_migrated_v2'").get();
+    if (done) return;
+    const rows = db.prepare('SELECT id, data FROM categories').all();
+    const upd = db.prepare('UPDATE categories SET data=? WHERE id=?');
+    const tx  = db.transaction(() => {
+      for (const r of rows) {
+        try {
+          const c = JSON.parse(r.data);
+          const lc = String(c.color || '').toLowerCase();
+          if (LEGACY_TO_NEW[lc]) {
+            c.color = LEGACY_TO_NEW[lc];
+            upd.run(JSON.stringify(c), r.id);
+          }
+        } catch {}
+      }
+      db.prepare('INSERT OR REPLACE INTO meta VALUES (?,?)').run('colors_migrated_v2', '1');
+    });
+    tx();
+    console.log('[Migration] Category colors updated to blue palette');
+  } catch (e) {
+    console.warn('[Migration] color migration skipped:', e?.message);
+  }
+}
+
 // ── Auto-lock ──────────────────────────────────────────────────────────────────
 function resetAutoLock() {
   if (autoLockTimeout) clearTimeout(autoLockTimeout);
@@ -233,11 +273,11 @@ function registerIPC() {
 
       // Seed default categories
       const defaultCats = [
-        {id:'cat-1',name:'Social Media',icon:'🌐',color:'#7c5cfc',isDefault:true},
-        {id:'cat-2',name:'Finance',     icon:'💳',color:'#00d68f',isDefault:true},
-        {id:'cat-3',name:'Work',        icon:'💼',color:'#00d4ff',isDefault:true},
-        {id:'cat-4',name:'Shopping',    icon:'🛒',color:'#ffb300',isDefault:true},
-        {id:'cat-5',name:'Gaming',      icon:'🎮',color:'#ff4757',isDefault:true},
+        {id:'cat-1',name:'Social Media',icon:'🌐',color:'#2563eb',isDefault:true},
+        {id:'cat-2',name:'Finance',     icon:'💳',color:'#16a34a',isDefault:true},
+        {id:'cat-3',name:'Work',        icon:'💼',color:'#0ea5e9',isDefault:true},
+        {id:'cat-4',name:'Shopping',    icon:'🛒',color:'#d97706',isDefault:true},
+        {id:'cat-5',name:'Gaming',      icon:'🎮',color:'#dc2626',isDefault:true},
       ];
       const ins = db.prepare('INSERT OR REPLACE INTO categories VALUES (?,?)');
       defaultCats.forEach(c => ins.run(c.id, JSON.stringify(c)));
@@ -461,6 +501,8 @@ function registerIPC() {
       logAudit('entry_deleted', d.title || '');
     }
     db.prepare('DELETE FROM entries WHERE id=?').run(id);
+    // Tombstone so the deletion propagates on the next cloud sync
+    try { cloudHooks?.markTombstone?.(id, 'entries'); } catch {}
     resetAutoLock();
   });
 
@@ -477,7 +519,7 @@ function registerIPC() {
     const safe = {
       name:  String(cat?.name  ?? '').slice(0, 64).trim(),
       icon:  String(cat?.icon  ?? '📁').slice(0, 8),
-      color: /^#[0-9a-f]{6}$/i.test(String(cat?.color ?? '')) ? String(cat.color) : '#7c5cfc',
+      color: /^#[0-9a-f]{6}$/i.test(String(cat?.color ?? '')) ? String(cat.color) : '#2563eb',
     };
     if (!safe.name) return null;
     const c = { id: crypto.randomUUID(), ...safe, isDefault: false };
@@ -496,7 +538,7 @@ function registerIPC() {
       ...existing,
       name:  String(cat?.name  ?? existing.name).slice(0, 64).trim(),
       icon:  String(cat?.icon  ?? existing.icon).slice(0, 8),
-      color: /^#[0-9a-f]{6}$/i.test(String(cat?.color ?? '')) ? String(cat.color) : (existing.color || '#7c5cfc'),
+      color: /^#[0-9a-f]{6}$/i.test(String(cat?.color ?? '')) ? String(cat.color) : (existing.color || '#2563eb'),
     };
     if (!next.name) return null;
     db.prepare('UPDATE categories SET data=? WHERE id=?').run(JSON.stringify(next), id);
@@ -524,6 +566,7 @@ function registerIPC() {
       db.prepare('DELETE FROM categories WHERE id=?').run(id);
     });
     tx();
+    try { cloudHooks?.markTombstone?.(id, 'categories'); } catch {}
     logAudit('category_deleted', id);
     return { success: true };
   });
@@ -641,51 +684,7 @@ function registerIPC() {
     resetAutoLock();
   });
 
-  // ── Cloud (Firebase — zero-knowledge, ciphertext only) ──
-  ipcMain.handle('cloud:status', () => {
-    const row = db?.prepare('SELECT value FROM settings_store WHERE key=?').get('cloud_config');
-    if (!row) return { connected: false };
-    try { return JSON.parse(row.value); } catch { return { connected: false }; }
-  });
-
-  ipcMain.handle('cloud:connect', async (_, cfg) => {
-    // Firebase REST API — only encrypted blobs ever leave device
-    try {
-      const url = cfg.action === 'signup'
-        ? `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${cfg.apiKey}`
-        : `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${cfg.apiKey}`;
-      const resp = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: cfg.email, password: cfg.password, returnSecureToken: true })
-      });
-      const data = await resp.json();
-      if (!resp.ok) return { success: false, error: data.error?.message || 'Auth failed' };
-      const cloudState = { connected: true, email: cfg.email, idToken: data.idToken,
-        refreshToken: data.refreshToken, projectId: cfg.projectId, apiKey: cfg.apiKey,
-        authDomain: cfg.authDomain, lastSync: null };
-      db?.prepare('INSERT OR REPLACE INTO settings_store VALUES (?,?)').run('cloud_config', JSON.stringify(cloudState));
-      return { success: true };
-    } catch(e) {
-      return { success: false, error: e.message };
-    }
-  });
-
-  ipcMain.handle('cloud:sync', async () => {
-    if (!vaultKey || !db) return { success: false, error: 'Vault locked' };
-    const cfgRow = db.prepare('SELECT value FROM settings_store WHERE key=?').get('cloud_config');
-    if (!cfgRow) return { success: false, error: 'Not connected' };
-    const cfg = JSON.parse(cfgRow.value);
-    // Upload: only ciphertext blobs sent to Firestore — server never sees plaintext
-    // Full implementation: POST to Firestore REST API
-    cfg.lastSync = Date.now();
-    db.prepare('INSERT OR REPLACE INTO settings_store VALUES (?,?)').run('cloud_config', JSON.stringify(cfg));
-    return { success: true, synced: db.prepare('SELECT COUNT(*) as n FROM entries').get().n };
-  });
-
-  ipcMain.handle('cloud:disconnect', () => {
-    db?.prepare('DELETE FROM settings_store WHERE key=?').run('cloud_config');
-  });
+  // ── Cloud handlers moved to main-cloud.js ──────────────────────────────────
 
   // ── Settings ──
   ipcMain.handle('settings:get', () => {
@@ -703,6 +702,7 @@ function registerIPC() {
       minimizeToTray:   v => Boolean(v),
       lockOnBlur:       v => Boolean(v),
       theme:            v => ['dark','light','system'].includes(v) ? v : 'dark',
+      cloudAutoSync:    v => Boolean(v),
     };
     const sanitised = {};
     for (const [k, coerce] of Object.entries(ALLOWED_SETTINGS)) {
@@ -761,6 +761,17 @@ function registerIPC() {
     calcStrength,
     mainWindow
   );
+
+  // ── Cloud sync (Firebase, zero-knowledge) ──────────────────────────────────
+  cloudHooks = registerCloudIPC({
+    ipcMain,
+    db:             () => db,
+    getKey:         () => vaultKey,
+    encrypt, decrypt, logAudit, resetAutoLock,
+    sendToRenderer: (channel, payload) => {
+      try { mainWindow?.webContents?.send(channel, payload); } catch {}
+    },
+  });
 }
 
 // ── Password utilities ─────────────────────────────────────────────────────────
@@ -814,12 +825,32 @@ function createWindow() {
     backgroundColor: '#03030a',
     show: false,
     icon: (() => {
+      // Try asset files first, fall back to a programmatically generated icon
       const candidates = [
         path.join(__dirname, 'assets', 'icon.png'),
         path.join(__dirname, '..', 'assets', 'icon.png'),
         path.join(__dirname, 'icon.png'),
       ];
-      return candidates.find(p => fs.existsSync(p)) || undefined;
+      const found = candidates.find(p => fs.existsSync(p));
+      if (found) return found;
+      // Generate a minimal icon via nativeImage so the taskbar always shows something
+      try {
+        const { nativeImage } = require('electron');
+        // 32x32 purple lock icon as raw RGBA
+        const size = 32;
+        const buf  = Buffer.alloc(size * size * 4);
+        for (let y = 0; y < size; y++) {
+          for (let x = 0; x < size; x++) {
+            const i = (y * size + x) * 4;
+            // Simple purple square background
+            buf[i]   = 37;  // R (#2563eb)
+            buf[i+1] = 99;  // G
+            buf[i+2] = 235; // B
+            buf[i+3] = 255; // A
+          }
+        }
+        return nativeImage.createFromBuffer(buf, { width: size, height: size });
+      } catch { return undefined; }
     })(),
     webPreferences: {
       preload:                   path.join(__dirname, 'preload.js'),
@@ -850,7 +881,7 @@ function createWindow() {
           "script-src 'self';" +
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;" +
           "font-src 'self' https://fonts.gstatic.com;" +
-          "img-src 'self' data: https://www.google.com https://api.qrserver.com;" +
+          "img-src 'self' data: https://t2.gstatic.com https://www.google.com https://icons.duckduckgo.com https://api.qrserver.com;" +
           "connect-src 'none';" +
           "frame-src 'none';" +
           "object-src 'none';" +
@@ -910,7 +941,8 @@ function setupNetworkBlocking() {
     'https://firestore.googleapis.com/',        // Firestore (optional, ciphertext only)
     'https://fonts.googleapis.com/',            // Google Fonts CSS
     'https://fonts.gstatic.com/',              // Google Fonts files
-    'https://www.google.com/s2/favicons',      // Favicons
+    'https://t2.gstatic.com/faviconV2',        // Google FaviconV2 (primary)
+    'https://www.google.com/s2/favicons',      // Google S2 favicons (fallback)
     'https://icons.duckduckgo.com/ip3/',       // Favicon fallback (no tracking)
     'https://api.qrserver.com/',               // QR code fallback
   ];
@@ -931,6 +963,7 @@ app.whenReady().then(() => {
   app.setAsDefaultProtocolClient('vaultguard'); // handle vaultguard:// URIs locally only
   
   initDB();
+  migrateLegacyColors();
   registerIPC();
   setupNetworkBlocking();
   applySecurityHardening(); // also applied via security.js (belt + suspenders)

@@ -21,9 +21,13 @@ const ALLOWED_ORIGIN_PREFIXES = [
   'https://api.pwnedpasswords.com/',    // HIBP k-anon — only 5-char SHA1 prefix sent
   'https://fonts.googleapis.com/',      // Google Fonts CSS
   'https://fonts.gstatic.com/',         // Google Fonts files
-  'https://www.google.com/s2/favicons', // Website favicons
+  'https://t2.gstatic.com/faviconV2',    // Google FaviconV2 API (primary)
+  'https://www.google.com/s2/favicons', // Google S2 favicons (fallback)
   'https://icons.duckduckgo.com/ip3/',  // Favicon fallback (no tracking)
   'https://api.qrserver.com/',          // TOTP QR code generation
+  'https://identitytoolkit.googleapis.com/',  // Firebase Auth REST (sign in/up)
+  'https://securetoken.googleapis.com/',      // Firebase ID-token refresh
+  'https://firestore.googleapis.com/',        // Firestore REST — ciphertext blobs only
 ];
 
 const CSP = [
@@ -31,7 +35,7 @@ const CSP = [
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
-  "img-src 'self' data:",
+  "img-src 'self' data: https://t2.gstatic.com https://www.google.com https://icons.duckduckgo.com https://api.qrserver.com",
   "connect-src 'none'",       // Renderer JS cannot make ANY fetch/XHR
   "frame-src 'none'",
   "object-src 'none'",
